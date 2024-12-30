@@ -1,352 +1,1529 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etra - Card Management System</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etra CITIZEN - Extreme UI</title>
+
+
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" 
+    rel="stylesheet"
+  />
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <script 
+    defer
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
+  ></script>
+
+  
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/chart.js"
+  ></script>
+
+
+  <style>
+
+  html, body {
+    margin: 0; padding: 0;
+    overflow: hidden; /* no global scroll */
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f5f7;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(to right, #232526, #414345);
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0; /* don't shrink header */
+  }
+
+  .header-left .navbar-brand {
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+
+  .header-right .nav-link {
+    color: #ccc;
+    margin-left: 18px;
+    text-decoration: none;
+  }
+  .header-right .nav-link.active {
+    color: #fff;
+    font-weight: bold;
+  }
+  .header-right .nav-link:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* MAIN CONTENT WRAPPER: SCROLL ONLY INSIDE IT */
+  .content-wrapper {
+    flex: 1; /* take remaining space */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .content-inner {
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* FOOTER: FIXED at bottom */
+  footer {
+    background: #e9ecef;
+    color: #333;
+    text-align: center;
+    padding: 10px 20px;
+    flex-shrink: 0; /* don't shrink footer */
+    font-size: 0.9rem;
+  }
+
+  .insights-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
+    /* On smaller screens, we might do 1 column */
+  }
+  @media(max-width: 768px) {
+    .insights-container {
+      grid-template-columns: 1fr; 
+    }
+  }
+
+  .insight-card {
+    position: relative;
+    height: 180px;
+    border-radius: 10px;
+    color: #fff;
+    overflow: hidden;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.4s ease-in-out;
+    cursor: pointer; /* to indicate clickable for swap */
+  }
+
+  .insight-card:hover {
+    transform: scale(1.02);
+  }
+
+  /* Card Title & Value styles */
+  .insight-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .insight-value {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  /* 4 gradient cards (2 visible, 2 hidden) */
+  .gradient1 {
+    background: linear-gradient(to right, #36D1DC, #5B86E5); /* turquoise/blue */
+  }
+  .gradient2 {
+    background: linear-gradient(to right, #C02425, #F0CB35); /* red/gold */
+  }
+  .gradient3 {
+    background: linear-gradient(to right, #00B09B, #96C93D); /* teal/green */
+  }
+  .gradient4 {
+    background: linear-gradient(to right, #f953c6, #b91d73); /* pink/purple */
+  }
+
+  /* HIDDEN CARDS get display none initially, or we manage them via JS. */
+  .insight-card.hidden {
+    display: none;
+  }
+
+
+  .swap-in {
+    animation: swapIn 0.4s forwards;
+  }
+  .swap-out {
+    animation: swapOut 0.4s forwards;
+  }
+
+  @keyframes swapIn {
+    0% { opacity: 0; transform: rotateY(90deg); }
+    100% { opacity: 1; transform: rotateY(0deg); }
+  }
+  @keyframes swapOut {
+    0% { opacity: 1; transform: rotateY(0deg); }
+    100% { opacity: 0; transform: rotateY(90deg); }
+  }
+
+
+  .charts-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+  }
+  @media (max-width: 768px) {
+    .charts-section {
+      grid-template-columns: 1fr; 
+    }
+  }
+
+  .chart-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    height: 320px; /* fixed to avoid overflow */
+    position: relative;
+  }
+  .chart-card .chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  #cardTypeChart,
+  #statusChart {
+    width: 100% !important;
+    height: 220px !important; /* keep it from overflowing */
+  }
+
+  .chart-placeholder {
+    text-align: center;
+    margin-top: 30px;
+    color: #999;
+    font-style: italic;
+  }
+
+
+  #toastContainer {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 9999;
+  }
+
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #eee;
+  }
+
+  .table-container {
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
+
+  </style>
 </head>
 
 <body>
-    <header>Etra - Card Management System</header>
 
-    <nav>
-        <a href="#home" onclick="switchTab('home')">Home</a>
-        <a href="#registration" onclick="switchTab('registration')">User Registration</a>
-        <a href="#cards" onclick="switchTab('cards')">Card Management</a>
-        <a href="#recharge" onclick="switchTab('recharge')">Recharge</a>
-        <a href="#history" onclick="switchTab('history')">History</a>
-        <a href="#scan" onclick="switchTab('scan')">Scan</a>
-        <a href="#reports" onclick="switchTab('reports')">Reports</a>
-    </nav>
-
-    <div id="content-container">
-        <!-- Dynamic Content Will Be Loaded Here -->
+  <header>
+    <div class="header-left d-flex align-items-center">
+      <a class="navbar-brand text-white" href="#">
+        <i class="fas fa-bus me-2"></i>Etra CITIZEN
+      </a>
     </div>
+    <div class="header-right d-flex align-items-center">
+      <a class="nav-link active" href="#home" onclick="switchTab('home')">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <a class="nav-link" href="#registration" onclick="switchTab('registration')">
+        <i class="fas fa-user-plus"></i> Registration
+      </a>
+      <a class="nav-link" href="#cards" onclick="switchTab('cards')">
+        <i class="fas fa-id-card"></i> Cards
+      </a>
+      <a class="nav-link" href="#recharge" onclick="switchTab('recharge')">
+        <i class="fas fa-credit-card"></i> Recharge
+      </a>
+      <a class="nav-link" href="#history" onclick="switchTab('history')">
+        <i class="fas fa-history"></i> History
+      </a>
+      <a class="nav-link" href="#scan" onclick="switchTab('scan')">
+        <i class="fas fa-qrcode"></i> Scan
+      </a>
+      <a class="nav-link" href="#profile" onclick="switchTab('profile')">
+        <i class="fas fa-user"></i> Profile
+      </a>
+      <a class="nav-link" href="#reports" onclick="switchTab('reports')">
+        <i class="fas fa-chart-bar"></i> Reports
+      </a>
+    </div>
+  </header>
 
-    <footer>Etra Card Management System &copy; 2024</footer>
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
 
-    <script>
-        // Global state to simulate database
-        const users = [];
-        const scans = [];
-        const recharges = [];
-        const logbook = [];
 
-        // Helper Functions
-        const renderContent = (html) => {
-            const container = document.getElementById("content-container");
-            container.innerHTML = html;
-        };
+  <div class="content-wrapper">
+    <div class="content-inner" id="content-container">
+      <!-- Dynamic content loaded via JS tabs -->
+    </div>
+  </div>
 
-        const showAlert = (type, title, message) => {
-            Swal.fire({
-                icon: type,
-                title: title,
-                text: message,
-                confirmButtonColor: type === 'error' ? '#d33' : '#3085d6'
-            });
-        };
+  <footer>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <a href="#" class="text-decoration-none me-2">Demo</a>
+        <a href="#" class="text-decoration-none me-2">Version</a>
+      </div>
+      <small class="text-muted">Etra CITIZEN System &copy; 2024. All Rights Reserved.</small>
+    </div>
+  </footer>
 
-        const validateUserInput = (fields) => {
-            for (const [key, value] of Object.entries(fields)) {
-                if (!value) {
-                    showAlert('error', 'Validation Error', `${key} is required.`);
-                    return false;
-                }
-            }
-            return true;
-        };
 
-        const validateExpirationDate = (date, isWhiteCard = false) => {
-            const today = new Date();
-            const expiration = new Date(date);
-            const diffDays = (expiration - today) / (1000 * 60 * 60 * 24);
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
 
-            if (isWhiteCard && diffDays > 30) {
-                showAlert('error', 'Invalid Expiration', 'White cards cannot have validity greater than 30 days.');
-                return false;
-            }
+  <script>
 
-            if (!isWhiteCard && diffDays < 45) {
-                showAlert('error', 'Invalid Expiration', 'Expiration date must be at least 45 days in the future.');
-                return false;
-            }
+const LOCALSTORAGE_KEY = 'etraCitizenExtreme_v4';
+let users = [];
+let scans = [];
+let recharges = [];
+let logbook = [];
 
-            return true;
-        };
+function loadDataFromLocalStorage() {
+  try {
+    const dStr = localStorage.getItem(LOCALSTORAGE_KEY);
+    if (dStr) {
+      const data = JSON.parse(dStr);
+      if (data.users) users = data.users;
+      if (data.scans) scans = data.scans;
+      if (data.recharges) recharges = data.recharges;
+      if (data.logbook) logbook = data.logbook;
+    }
+  } catch(e) {
+    console.error('Error loading localStorage data:', e);
+  }
+}
 
-        const logAction = (actionType, details) => {
-            logbook.push({
-                timestamp: new Date().toLocaleString(),
-                actionType,
-                details
-            });
-        };
+function saveDataToLocalStorage() {
+  try {
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify({
+      users, scans, recharges, logbook
+    }));
+  } catch(e) {
+    console.error('Error saving localStorage data:', e);
+  }
+}
 
-        const updateTable = (tableId, data, columns) => {
-            const table = document.getElementById(tableId);
-            table.innerHTML = '';
+function showAlert(type, title, text) {
+  Swal.fire({
+    icon: type,
+    title,
+    text,
+    confirmButtonColor: (type==='error')?'#d33':'#3085d6'
+  });
+}
 
-            const thead = document.createElement('thead');
-            const trHead = document.createElement('tr');
-            columns.forEach((col) => {
-                const th = document.createElement('th');
-                th.innerText = col;
-                trHead.appendChild(th);
-            });
-            thead.appendChild(trHead);
-            table.appendChild(thead);
+function showToast(message, title='Notification', color='bg-primary') {
+  const toastId = 'toast-' + Date.now();
+  const toastHtml = `
+    <div id="${toastId}" class="toast align-items-center text-white ${color} border-0" 
+         role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <strong>${title}:</strong> ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  `;
+  const container = document.getElementById('toastContainer');
+  container.insertAdjacentHTML('beforeend', toastHtml);
+  const toastElem = document.getElementById(toastId);
+  const bsToast = new bootstrap.Toast(toastElem, { delay: 3500 });
+  bsToast.show();
+}
 
-            const tbody = document.createElement('tbody');
-            data.forEach((row) => {
-                const tr = document.createElement('tr');
-                columns.forEach((col) => {
-                    const td = document.createElement('td');
-                    td.innerText = row[col] || '-';
-                    tr.appendChild(td);
-                });
-                tbody.appendChild(tr);
-            });
-            table.appendChild(tbody);
-        };
+function validateUserInput(fields) {
+  for (let [key, val] of Object.entries(fields)) {
+    if (!val) {
+      showAlert('error','Validation Error', `${key} is required.`);
+      return false;
+    }
+  }
+  return true;
+}
 
-        // Tab Rendering Functions
-        const tabs = {
-            home: () => {
-                renderContent(`
-                    <h2>Dashboard Overview</h2>
-                    <div>
-                        <p>Total Users: ${users.length}</p>
-                        <p>Total Balance: ${users.reduce((sum, user) => sum + user.balance, 0)} days</p>
-                        <p>Expiring IDs in 45 days: ${users.filter(user => new Date(user.idExpiration) < new Date(new Date().setDate(new Date().getDate() + 45))).length}</p>
-                        <p>Low Balance Users: ${users.filter(user => user.balance < 10).length}</p>
-                        <canvas id="balanceChart"></canvas>
-                    </div>
-                `);
+function validateExpirationDate(dateStr, isWhite) {
+  const now = new Date();
+  const exp = new Date(dateStr);
+  const diff = (exp - now)/(1000*60*60*24);
+  if (isWhite && diff>30) {
+    showAlert('error','Invalid Exp','White card max 30 days.');
+    return false;
+  }
+  if (!isWhite && diff<45) {
+    showAlert('error','Invalid Exp','EID card requires ≥45 days.');
+    return false;
+  }
+  return true;
+}
 
-                const ctx = document.getElementById('balanceChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: users.map(user => user.name),
-                        datasets: [{
-                            label: 'Balance (days)',
-                            data: users.map(user => user.balance),
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            },
-            registration: () => {
-                renderContent(`
-                    <h2>User Registration</h2>
-                    <form onsubmit="registerUser(event)">
-                        <label>User ID: <input type="text" id="userId"></label><br>
-                        <label>Full Name: <input type="text" id="fullName"></label><br>
-                        <label>Location: <input type="text" id="location"></label><br>
-                        <label>Country: <input type="text" id="country"></label><br>
-                        <label>Contact Number: <input type="text" id="contact"></label><br>
-                        <label>ID Expiration Date: <input type="date" id="idExpiration"></label><br>
-                        <label>White Card: <input type="checkbox" id="whiteCard"></label><br>
-                        <button type="submit">Register</button>
-                    </form>
-                `);
-            },
-            cards: () => {
-                renderContent(`
-                    <h2>Card Management</h2>
-                    <table id="cardTable" border="1"></table>
-                `);
-                updateTable('cardTable', users, ['id', 'name', 'balance', 'idExpiration', 'remarks']);
-            },
-            recharge: () => {
-                renderContent(`
-                    <h2>Recharge</h2>
-                    <form onsubmit="rechargeUser(event)">
-                        <label>User ID: <input type="text" id="rechargeUserId"></label><br>
-                        <label>Recharge Option:
-                            <select id="rechargeOption">
-                                <option value="10">10 Days - AED 50</option>
-                                <option value="15">15 Days - AED 75</option>
-                                <option value="30">30 Days + 5 Grace - AED 125</option>
-                                <option value="daily">Daily Pass - AED 10</option>
-                            </select>
-                        </label><br>
-                        <label>Payment Method:
-                            <select id="paymentMethod">
-                                <option value="card">Card</option>
-                                <option value="cash">Cash</option>
-                            </select>
-                        </label><br>
-                        <button type="submit">Recharge</button>
-                    </form>
-                `);
-            },
-            history: () => {
-                renderContent(`
-                    <h2>History</h2>
-                    <div>
-                        <h3>Travel History</h3>
-                        <table id="travelHistory" border="1"></table>
-                    </div>
-                    <div>
-                        <h3>Recharge History</h3>
-                        <table id="rechargeHistory" border="1"></table>
-                    </div>
-                `);
-                updateTable('travelHistory', scans, ['userId', 'timestamp', 'entry', 'exit']);
-                updateTable('rechargeHistory', recharges, ['userId', 'date', 'method', 'option']);
-            },
-            scan: () => {
-                renderContent(`
-                    <h2>Scan</h2>
-                    <form onsubmit="scanCard(event)">
-                        <label>Scan Method:
-                            <select id="scanMethod">
-                                <option value="manual">Manual</option>
-                                <option value="qr">QR Code</option>
-                            </select>
-                        </label><br>
-                        <label>User ID: <input type="text" id="scanUserId"></label><br>
-                        <button type="submit">Scan</button>
-                    </form>
-                `);
-            },
-            reports: () => {
-                renderContent(`
-                    <h2>Reports</h2>
-                    <form id="reportFilter">
-                        <select id="reportType">
-                            <option value="financial">Financial Report</option>
-                            <option value="lowBalance">Low Balance</option>
-                            <option value="expiredCards">Expired Cards</option>
-                        </select>
-                        <button type="submit">Generate</button>
-                    </form>
-                    <table id="reportTable" border="1"></table>
-                `);
-                document.getElementById('reportFilter').onsubmit = (e) => {
-                    e.preventDefault();
-                    const reportType = document.getElementById('reportType').value;
-                    if (reportType === 'financial') {
-                        const passkey = prompt('Enter Passkey to View Cash Payments:');
-                        if (passkey !== '4613') {
-                            showAlert('error', 'Access Denied', 'Invalid Passkey!');
-                            return;
-                        }
-                    }
-                    updateTable('reportTable', users, ['id', 'name', 'balance', 'idExpiration']); // Placeholder
-                };
-            },
-        };
+function logAction(type, details) {
+  logbook.push({
+    timestamp: new Date().toLocaleString(),
+    actionType: type,
+    details
+  });
+  saveDataToLocalStorage();
+}
 
-        // Navigation
-        const switchTab = (tabId) => {
-            if (tabs[tabId]) tabs[tabId]();
-        };
+function getUserBalance(uid) {
+  const u = users.find(x => x.id===uid);
+  if (!u) return '-';
+  return u.balance.toFixed(2);
+}
 
-        document.addEventListener("DOMContentLoaded", () => {
-            switchTab("home");
+function searchTable(tableId, searchId) {
+  const input = document.getElementById(searchId);
+  const filter = input.value.toLowerCase();
+  const table = document.getElementById(tableId);
+  const rows = table.getElementsByTagName("tr");
+  for(let i=1; i<rows.length; i++) {
+    let show = false;
+    const tds = rows[i].getElementsByTagName("td");
+    for(let j=0; j<tds.length; j++){
+      if (tds[j].innerText.toLowerCase().includes(filter)) {
+        show = true; break;
+      }
+    }
+    rows[i].style.display = show ? '' : 'none';
+  }
+}
+
+
+function setDefaultExpiration() {
+  const cType = document.getElementById("cardType");
+  const expElem = document.getElementById("idExpiration");
+  if (!cType || !expElem) return;
+
+  const offset = (cType.value==='white') ? 30 : 45;
+  const dt = new Date();
+  dt.setDate(dt.getDate()+offset);
+  expElem.value = dt.toISOString().split('T')[0];
+}
+
+
+function switchTab(tabId) {
+  document.querySelectorAll('.header-right .nav-link').forEach(link => {
+    const href = link.getAttribute('href')||'';
+    const linkTab = href.replace('#','');
+    if (linkTab===tabId) link.classList.add('active');
+    else link.classList.remove('active');
+  });
+
+  if (tabs[tabId]) {
+    tabs[tabId]();
+  }
+}
+
+function renderContent(html) {
+  const cont = document.getElementById("content-container");
+  cont.innerHTML = html;
+}
+
+
+let visibleCards = ['totalUsers','totalBalance']; 
+
+
+function swapCard(cardKey) {
+
+  const hiddenSet = ['totalUsers','totalBalance','expiring','lowBalance'].filter(x => !visibleCards.includes(x));
+
+  const idx = visibleCards.indexOf(cardKey);
+  if (idx<0) return; 
+  visibleCards.splice(idx,1); 
+
+  const newCard = hiddenSet[0];
+  visibleCards.push(newCard);
+
+  tabs.home();
+}
+
+
+const tabs = {
+  home: () => {
+    // We'll gather stats
+    const totalUsers = users.length;
+    const totalBal = users.reduce((acc,u)=>acc+u.balance,0).toFixed(2);
+    const expiringCount = users.filter(u=>{
+      const d = new Date(u.idExpiration);
+      let limit = new Date();
+      limit.setDate(limit.getDate()+45);
+      return d<limit;
+    }).length;
+    const lowBalCount = users.filter(u=>u.balance<10).length;
+
+    // We'll define a dictionary for each card
+    const cardData = {
+      totalUsers: {
+        title: 'Total Users',
+        value: totalUsers,
+        gradient: 'gradient1',
+        icon: 'fa-users'
+      },
+      totalBalance: {
+        title: 'Total Balance (days)',
+        value: totalBal,
+        gradient: 'gradient2',
+        icon: 'fa-wallet'
+      },
+      expiring: {
+        title: 'Expiring (≤45d)',
+        value: expiringCount,
+        gradient: 'gradient3',
+        icon: 'fa-clock'
+      },
+      lowBalance: {
+        title: 'Low Balance (<10)',
+        value: lowBalCount,
+        gradient: 'gradient4',
+        icon: 'fa-exclamation-triangle'
+      }
+    };
+
+    // We'll build the HTML for the 2 visible cards
+    let cardsHtml = '';
+    visibleCards.forEach(key => {
+      const d = cardData[key];
+      cardsHtml += `
+        <div class="insight-card ${d.gradient}" onclick="swapCard('${key}')">
+          <div>
+            <div class="insight-title">${d.title}</div>
+            <div class="insight-value">${d.value}</div>
+          </div>
+          <i class="fas ${d.icon} fa-4x" style="opacity:0.15; position:absolute; bottom:10px; right:10px;"></i>
+        </div>
+      `;
+    });
+
+    // The rest is the charts
+    // We'll do card type & status
+    const whiteCount = users.filter(u=>u.remarks==='White Card').length;
+    const eidCount   = users.filter(u=>u.remarks==='EID Card').length;
+    const activeCount = users.filter(u=>u.status!=='Frozen').length;
+    const frozenCount = users.filter(u=>u.status==='Frozen').length;
+
+    let homeHtml = `
+      <div class="insights-container">
+        ${cardsHtml}
+      </div>
+      <div class="charts-section">
+        <div class="chart-card">
+          <div class="chart-title">Card Type Distribution</div>
+          <canvas id="cardTypeChart" width="400" height="220"></canvas>
+          <div id="cardTypePlaceholder" class="chart-placeholder" style="display:none;">
+            No data available. Add cards to populate the chart.
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Status Distribution</div>
+          <canvas id="statusChart" width="400" height="220"></canvas>
+          <div id="statusPlaceholder" class="chart-placeholder" style="display:none;">
+            No data available. Add cards to populate the chart.
+          </div>
+        </div>
+      </div>
+    `;
+
+    renderContent(homeHtml);
+
+    // Build card type chart
+    const ctc = document.getElementById('cardTypeChart');
+    let hasAnyCard = (whiteCount+eidCount)>0;
+    if (hasAnyCard) {
+      new Chart(ctc, {
+        type: 'doughnut',
+        data: {
+          labels: ['EID','White'],
+          datasets: [{
+            data: [eidCount,whiteCount],
+            backgroundColor: ['#3498db','#f1c40f']
+          }]
+        },
+        options: { maintainAspectRatio:false }
+      });
+    } else {
+      document.getElementById('cardTypePlaceholder').style.display='block';
+      ctc.style.display='none';
+    }
+
+    const stc = document.getElementById('statusChart');
+    let hasAnyStatus = (activeCount+frozenCount)>0;
+    if (hasAnyStatus) {
+      new Chart(stc, {
+        type: 'pie',
+        data: {
+          labels: ['Active','Frozen'],
+          datasets: [{
+            data: [activeCount,frozenCount],
+            backgroundColor: ['#1abc9c','#e056fd']
+          }]
+        },
+        options: { maintainAspectRatio:false }
+      });
+    } else {
+      document.getElementById('statusPlaceholder').style.display='block';
+      stc.style.display='none';
+    }
+  },
+
+  registration: () => {
+    let html = `
+      <h2><i class="fas fa-user-plus me-2"></i>User Registration</h2>
+      <form onsubmit="registerUser(event)">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">User ID</label>
+            <input type="text" class="form-control" id="userId" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="fullName" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Country</label>
+            <input type="text" class="form-control" id="country" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Contact Number</label>
+            <input type="tel" class="form-control" id="contact" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Card Type</label>
+            <select class="form-select" id="cardType" required onchange="toggleExpirationDate()">
+              <option value="eid" selected>EID Card</option>
+              <option value="white">White Card</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Expiration Date</label>
+            <input type="date" class="form-control" id="idExpiration" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Remarks</label>
+            <textarea class="form-control" id="remarks" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="fas fa-save me-1"></i>Register
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            <i class="fas fa-undo me-1"></i>Clear
+          </button>
+        </div>
+      </form>
+    `;
+    renderContent(html);
+    setDefaultExpiration();
+  },
+
+  cards: () => {
+    // same as previous approach
+    const eidRows = users.filter(u=>u.remarks==='EID Card').map(u=>`
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.contact}</td>
+        <td>${u.idExpiration}</td>
+        <td>${u.status||'Active'}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="freezeCard('${u.id}')">
+            <i class="fas fa-snowflake"></i>
+          </button>
+          <button class="btn btn-sm btn-success" onclick="unfreezeCard('${u.id}')">
+            <i class="fas fa-undo"></i>
+          </button>
+          <button class="btn btn-sm btn-info" onclick="viewHistory('${u.id}')">
+            <i class="fas fa-history"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    const whiteRows = users.filter(u=>u.remarks==='White Card').map(u=>`
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.contact}</td>
+        <td>${u.issueDate||'-'}</td>
+        <td>${u.idExpiration}</td>
+        <td>${u.status||'Active'}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" onclick="freezeCard('${u.id}')">
+            <i class="fas fa-snowflake"></i>
+          </button>
+          <button class="btn btn-sm btn-success" onclick="unfreezeCard('${u.id}')">
+            <i class="fas fa-undo"></i>
+          </button>
+          <button class="btn btn-sm btn-info" onclick="viewHistory('${u.id}')">
+            <i class="fas fa-history"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    let html = `
+      <h2><i class="fas fa-id-card me-2"></i>Card Management</h2>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabEID">EID Cards</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabWhite">White Cards</button>
+        </li>
+      </ul>
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="tabEID">
+          <input type="text" id="searchEID" class="form-control mb-2" placeholder="Search EID" onkeyup="searchTable('eidTable','searchEID')" />
+          <div class="table-container">
+            <table class="table table-striped" id="eidTable">
+              <thead>
+                <tr>
+                  <th>User ID</th><th>Name</th><th>Contact</th><th>Expiration</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${eidRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="tabWhite">
+          <input type="text" id="searchWhite" class="form-control mb-2" placeholder="Search White" onkeyup="searchTable('whiteTable','searchWhite')" />
+          <div class="table-container">
+            <table class="table table-striped" id="whiteTable">
+              <thead>
+                <tr>
+                  <th>User ID</th><th>Name</th><th>Contact</th><th>Issue Date</th><th>Expiration</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${whiteRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+    renderContent(html);
+  },
+
+  recharge: () => {
+    const recent = recharges.slice(-5).reverse().map(r=>`
+      <tr>
+        <td>${r.userId}</td>
+        <td>${r.date}</td>
+        <td>${r.option}</td>
+        <td>AED ${r.amount}</td>
+        <td>${r.method}</td>
+        <td>${r.remarks||'-'}</td>
+      </tr>
+    `).join('');
+    let html = `
+      <h2><i class="fas fa-credit-card me-2"></i>Recharge</h2>
+      <form onsubmit="rechargeUser(event)">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">User ID</label>
+            <input type="text" class="form-control" id="rechargeUserId" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Recharge Option</label>
+            <select class="form-select" id="rechargeOption" required>
+              <option value="10">10 Days - AED 50</option>
+              <option value="15">15 Days - AED 75</option>
+              <option value="30">30 Days + 5 Grace - AED 125</option>
+              <option value="daily">Daily Pass - AED 10</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Payment Method</label>
+            <select class="form-select" id="paymentMethod" required>
+              <option value="card">Card</option>
+              <option value="cash">Cash</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Remarks</label>
+            <textarea class="form-control" id="rechargeRemarks" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="fas fa-credit-card me-1"></i>Recharge
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            <i class="fas fa-undo me-1"></i>Clear
+          </button>
+        </div>
+      </form>
+      <hr class="my-4" />
+      <h4>Recent Recharges</h4>
+      <div class="table-container">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>User ID</th><th>Date & Time</th><th>Option</th><th>Amount</th><th>Payment</th><th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${recent}
+          </tbody>
+        </table>
+      </div>
+    `;
+    renderContent(html);
+  },
+
+  history: () => {
+    let histHtml = `
+      <h2><i class="fas fa-history me-2"></i>History</h2>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#travelHistTab">Travel History</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#rechargeHistTab">Recharge History</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#incidentTab">Incidents</button>
+        </li>
+      </ul>
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="travelHistTab">
+          <input type="text" id="searchTravel" class="form-control mb-2" placeholder="Search Travel" onkeyup="searchTable('travelHistoryTable','searchTravel')" />
+          <div class="table-container">
+            <table class="table table-striped" id="travelHistoryTable">
+              <thead>
+                <tr><th>User ID</th><th>In Time</th><th>Date</th><th>Bus No.</th><th>Remaining</th></tr>
+              </thead>
+              <tbody>
+                ${scans.map(s=>`
+                  <tr>
+                    <td>${s.userId}</td>
+                    <td>${s.inTime||'-'}</td>
+                    <td>${s.dateStr||'-'}</td>
+                    <td>${s.busNo||'Citizen 1'}</td>
+                    <td>${getUserBalance(s.userId)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="rechargeHistTab">
+          <input type="text" id="searchRechargeHist" class="form-control mb-2" placeholder="Search Recharge" onkeyup="searchTable('rechargeHistoryTable','searchRechargeHist')" />
+          <div class="table-container">
+            <table class="table table-striped" id="rechargeHistoryTable">
+              <thead>
+                <tr><th>User ID</th><th>Date & Time</th><th>Option</th><th>Amount</th><th>Payment</th><th>Tx ID</th></tr>
+              </thead>
+              <tbody>
+                ${recharges.map((r,i)=>`
+                  <tr>
+                    <td>${r.userId}</td>
+                    <td>${r.date}</td>
+                    <td>${r.option}</td>
+                    <td>AED ${r.amount}</td>
+                    <td>${r.method}</td>
+                    <td>TX${1000+i}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="incidentTab">
+          <input type="text" id="searchIncident" class="form-control mb-2" placeholder="Search Incidents" onkeyup="searchTable('incidentTable','searchIncident')" />
+          <div class="table-container">
+            <table class="table table-striped" id="incidentTable">
+              <thead>
+                <tr><th>User ID</th><th>Type</th><th>Timestamp</th><th>Action</th></tr>
+              </thead>
+              <tbody>
+                ${logbook.filter(l=>l.actionType==='Incident').map(l=>`
+                  <tr>
+                    <td>${l.details.userId||'-'}</td>
+                    <td>${l.details.type||'-'}</td>
+                    <td>${l.timestamp}</td>
+                    <td>${l.details.action||'-'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+    renderContent(histHtml);
+  },
+
+  scan: () => {
+    const last = scans.slice(-5).reverse().map(s=>`
+      <tr>
+        <td>${s.userId}</td>
+        <td>${s.inTime||'-'}</td>
+        <td>${s.dateStr||'-'}</td>
+        <td>${s.busNo||'Citizen 1'}</td>
+        <td>${getUserBalance(s.userId)}</td>
+      </tr>
+    `).join('');
+    let html = `
+      <h2><i class="fas fa-qrcode me-2"></i>Scan</h2>
+      <form onsubmit="scanCard(event)">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Scan Method</label>
+            <select class="form-select" id="scanMethod" required>
+              <option value="manual">Manual</option>
+              <option value="qr">QR Code</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">User ID</label>
+            <input type="text" class="form-control" id="scanUserId" required />
+          </div>
+        </div>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-primary me-2">
+            <i class="fas fa-qrcode me-1"></i>Scan
+          </button>
+          <button type="reset" class="btn btn-secondary">
+            <i class="fas fa-undo me-1"></i>Clear
+          </button>
+        </div>
+      </form>
+      <hr class="my-4" />
+      <h4>Recent Scans</h4>
+      <div class="table-container">
+        <table class="table table-striped">
+          <thead>
+            <tr><th>User ID</th><th>In Time</th><th>Date</th><th>Bus No.</th><th>Balance</th></tr>
+          </thead>
+          <tbody>
+            ${last}
+          </tbody>
+        </table>
+      </div>
+    `;
+    renderContent(html);
+  },
+
+  profile: () => {
+    let html = `
+      <h2><i class="fas fa-user me-2"></i>Passenger Profile</h2>
+      <div class="mb-3">
+        <label class="form-label">Enter User ID</label>
+        <input type="text" class="form-control w-25" id="profileUserId" placeholder="e.g. U123" />
+      </div>
+      <button class="btn btn-info mb-3" onclick="viewPassengerProfile()">
+        <i class="fas fa-search me-1"></i>Search Profile
+      </button>
+      <div id="profileResult"></div>
+    `;
+    renderContent(html);
+  },
+
+  reports: () => {
+    let html = `
+      <h2><i class="fas fa-chart-bar me-2"></i>Reports</h2>
+      <form onsubmit="generateReport(event)">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Report Type</label>
+            <select id="reportType" class="form-select" required>
+              <option value="" disabled selected>Select...</option>
+              <option value="financial">Financial Report</option>
+              <option value="lowBalance">Low Balance</option>
+              <option value="expiredCards">Expired Cards</option>
+              <option value="whiteSummary">White Cards Summary</option>
+              <option value="cashTransactions">Cash Transactions</option>
+              <option value="cardTransactions">Card Transactions</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="startDate" required />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" required />
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="fas fa-filter me-1"></i>Generate
+            </button>
+          </div>
+        </div>
+      </form>
+      <div id="reportResult" class="mt-4"></div>
+    `;
+    renderContent(html);
+  }
+};
+
+/**************************************************************
+ * 7. EVENT HANDLERS & CORE LOGIC
+ **************************************************************/
+function registerUser(e) {
+  e.preventDefault();
+  const userId = document.getElementById("userId").value.trim();
+  const fullName = document.getElementById("fullName").value.trim();
+  const location = document.getElementById("location").value.trim();
+  const country = document.getElementById("country").value.trim();
+  const contact = document.getElementById("contact").value.trim();
+  const cType = document.getElementById("cardType").value;
+  const idExp = document.getElementById("idExpiration").value;
+  const remarks = document.getElementById("remarks").value.trim();
+
+  if(users.find(u=>u.id===userId)) {
+    showAlert('error','Registration Error','User ID already exists.');
+    return;
+  }
+  if(!validateUserInput({userId,fullName,location,country,contact,idExp})) return;
+  const isWhite = (cType==='white');
+  if(!validateExpirationDate(idExp, isWhite)) return;
+
+  const newUser = {
+    id: userId,
+    name: fullName,
+    location,
+    country,
+    contact,
+    cardType: isWhite?'White Card':'EID Card',
+    idExpiration: idExp,
+    balance: 0,
+    remarks: isWhite?'White Card':'EID Card',
+    status: 'Active',
+    issueDate: isWhite?new Date().toISOString().split('T')[0]:null
+  };
+  users.push(newUser);
+  saveDataToLocalStorage();
+  logAction('User Registered', newUser);
+  showAlert('success','Success','User registered!');
+  showToast(`User [${userId}] added.`, 'Registration','bg-success');
+  switchTab('cards');
+}
+
+function freezeCard(userId) {
+  const user = users.find(u=>u.id===userId);
+  if(!user) {
+    showAlert('error','Freeze Error','User not found.');
+    return;
+  }
+  if(user.status==='Frozen') {
+    showAlert('info','Already Frozen',`[${userId}] is already frozen.`);
+    return;
+  }
+  Swal.fire({
+    title:'Freeze Card',
+    input:'textarea',
+    inputLabel:'Reason',
+    showCancelButton:true,
+    confirmButtonText:'Freeze',
+    preConfirm:(val)=>{
+      if(!val) Swal.showValidationMessage('Remarks needed');
+      return val;
+    }
+  }).then(res=>{
+    if(res.isConfirmed) {
+      user.status='Frozen';
+      user.freezeRemarks=res.value;
+      saveDataToLocalStorage();
+      logAction('Card Frozen',{userId, reason:res.value});
+      showToast(`Card [${userId}] frozen.`, 'Freeze','bg-warning');
+      switchTab('cards');
+    }
+  });
+}
+
+function unfreezeCard(userId) {
+  const user = users.find(u=>u.id===userId);
+  if(!user) {
+    showAlert('error','Unfreeze Error','User not found');
+    return;
+  }
+  if(user.status!=='Frozen') {
+    showAlert('info','Not Frozen',`[${userId}] is not frozen`);
+    return;
+  }
+  user.status='Active';
+  delete user.freezeRemarks;
+  saveDataToLocalStorage();
+  logAction('Card Unfrozen',{userId});
+  showToast(`Card [${userId}] is active.`, 'Unfreeze','bg-success');
+  switchTab('cards');
+}
+
+function viewHistory(userId) {
+  const userScans = scans.filter(s=>s.userId===userId).slice(-5).reverse();
+  const userRech = recharges.filter(r=>r.userId===userId).slice(-5).reverse();
+
+  const scanRows = userScans.map(s=>`
+    <tr>
+      <td>${s.inTime||'-'}</td>
+      <td>${s.dateStr||'-'}</td>
+      <td>${s.busNo||'Citizen 1'}</td>
+    </tr>
+  `).join('');
+
+  const rechRows = userRech.map(r=>`
+    <tr>
+      <td>${r.date}</td>
+      <td>${r.option}</td>
+      <td>AED ${r.amount}</td>
+      <td>${r.method}</td>
+      <td>${r.remarks||'-'}</td>
+    </tr>
+  `).join('');
+
+  let html = `
+    <h5>Scans (Last 5)</h5>
+    <table class="table table-sm table-striped mb-3">
+      <thead><tr><th>In Time</th><th>Date</th><th>Bus No.</th></tr></thead>
+      <tbody>
+        ${scanRows||'<tr><td colspan="3">No scans</td></tr>'}
+      </tbody>
+    </table>
+    <h5>Recharges (Last 5)</h5>
+    <table class="table table-sm table-striped">
+      <thead><tr><th>Date & Time</th><th>Option</th><th>Amount</th><th>Method</th><th>Remarks</th></tr></thead>
+      <tbody>
+        ${rechRows||'<tr><td colspan="5">No recharges</td></tr>'}
+      </tbody>
+    </table>
+  `;
+  Swal.fire({
+    title: `History for [${userId}]`,
+    html,
+    width: 700,
+    confirmButtonText:'Close'
+  });
+}
+
+function rechargeUser(e) {
+  e.preventDefault();
+  const userId = document.getElementById("rechargeUserId").value.trim();
+  const rOpt = document.getElementById("rechargeOption").value;
+  const payMethod = document.getElementById("paymentMethod").value;
+  const remarks = document.getElementById("rechargeRemarks").value.trim();
+
+  const user = users.find(u=>u.id===userId);
+  if(!user) {
+    showAlert('error','Recharge Error','User not found');
+    return;
+  }
+
+  let days=0, amt=0;
+  if(rOpt==='daily') {
+    days=1; amt=10;
+  } else {
+    days=parseInt(rOpt);
+    if(days===10) amt=50;
+    else if(days===15) amt=75;
+    else if(days===30) amt=125;
+  }
+  user.balance+=days;
+  const rec={
+    userId,
+    date:new Date().toLocaleString(),
+    option:(rOpt==='daily')?'Daily Pass':days+' Days',
+    amount:amt,
+    method:payMethod,
+    remarks
+  };
+  recharges.push(rec);
+  saveDataToLocalStorage();
+  logAction('User Recharged', rec);
+  showAlert('success','Recharge Done',`[${userId}] +${days} days`);
+  showToast(`User [${userId}] recharged +${days} days.`, 'Recharge','bg-success');
+  switchTab('history');
+}
+
+function scanCard(e) {
+  e.preventDefault();
+  const m = document.getElementById("scanMethod").value;
+  const userId = document.getElementById("scanUserId").value.trim();
+  const user = users.find(u=>u.id===userId);
+
+  if(!user) {
+    showAlert('error','Scan Error',`User [${userId}] not found.`);
+    logAction('Incident',{ userId, type:'Unregistered Scan'});
+    return;
+  }
+
+
+  const todayStr = new Date().toDateString();
+  const dayScans = scans.filter(s=> s.userId===userId && new Date(s.timestamp).toDateString()===todayStr );
+  if(dayScans.length>=2) {
+    showAlert('error','Limit Reached',`User [${userId}] daily limit=2`);
+    logAction('Incident',{userId, type:'Scan Limit Reached', action:'Override Needed'});
+    return;
+  }
+  // check balance
+  if(user.balance<0.5) {
+    showAlert('error','No Balance',`[${userId}] <0.5 left`);
+    logAction('Incident',{ userId, type:'Insufficient Balance'});
+    return;
+  }
+  // check expiration
+  const exp = new Date(user.idExpiration);
+  if(exp<new Date()) {
+    showAlert('error','Expired',`[${userId}] card expired`);
+    logAction('Incident',{userId, type:'Expired Card'});
+    return;
+  } else {
+    const diff=(exp-(new Date()))/(1000*60*60*24);
+    if(diff<45 && user.remarks==='EID Card') {
+      showAlert('warning','EID Expiring',`[${userId}] EID <45 days`);
+      logAction('Warning',{userId,issue:'EID Expiring Soon'});
+    }
+  }
+
+  user.balance-=0.5;
+  const scanRec = {
+    userId,
+    timestamp:new Date().toLocaleString(),
+    inTime: new Date().toLocaleTimeString(),
+    dateStr: new Date().toLocaleDateString(),
+    busNo:'Citizen 1'
+  };
+  scans.push(scanRec);
+  saveDataToLocalStorage();
+  logAction('Card Scanned', scanRec);
+
+  showAlert('success','Scan OK',`[${userId}] scanned. Rem: ${user.balance.toFixed(2)} days`);
+  showToast(`Scan success [${userId}] -0.5 days`, 'Scan','bg-info');
+  switchTab('history');
+}
+
+function viewPassengerProfile() {
+  const pid = document.getElementById("profileUserId").value.trim();
+  const user = users.find(u=>u.id===pid);
+  const resultDiv = document.getElementById("profileResult");
+  if(!user) {
+    resultDiv.innerHTML=`
+      <div class="alert alert-danger">User [${pid}] not found</div>
+    `;
+    return;
+  }
+  const userScans = scans.filter(s=>s.userId===pid);
+  const userRechs = recharges.filter(r=>r.userId===pid);
+
+  const scansRows = userScans.map(s=>`
+    <tr>
+      <td>${s.inTime||'-'}</td>
+      <td>${s.dateStr||'-'}</td>
+      <td>${s.busNo||'Citizen 1'}</td>
+    </tr>
+  `).join('');
+  const rechsRows = userRechs.map(r=>`
+    <tr>
+      <td>${r.date}</td>
+      <td>${r.option}</td>
+      <td>AED ${r.amount}</td>
+      <td>${r.method}</td>
+      <td>${r.remarks||'-'}</td>
+    </tr>
+  `).join('');
+
+  let html = `
+    <div class="card mb-3">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Passenger: ${user.name} [${user.id}]</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Location:</strong> ${user.location}</p>
+        <p><strong>Country:</strong> ${user.country}</p>
+        <p><strong>Contact:</strong> ${user.contact}</p>
+        <p><strong>CardType:</strong> ${user.cardType}</p>
+        <p><strong>Status:</strong> ${user.status}</p>
+        <p><strong>Balance:</strong> ${user.balance.toFixed(2)}</p>
+        <p><strong>Expiration:</strong> ${user.idExpiration}</p>
+        ${user.issueDate?`<p><strong>Issue:</strong> ${user.issueDate}</p>`:''}
+        <p><strong>Remarks:</strong> ${user.remarks||'-'}</p>
+      </div>
+    </div>
+    <button class="btn btn-secondary mb-2" data-bs-toggle="collapse" data-bs-target="#fullProfileHist">
+      <i class="fas fa-eye me-1"></i>Show Full History
+    </button>
+    <div class="collapse" id="fullProfileHist">
+      <div class="card card-body">
+        <h5>Scans</h5>
+        <div class="table-container">
+          <table class="table table-striped mb-3">
+            <thead><tr><th>In Time</th><th>Date</th><th>Bus No.</th></tr></thead>
+            <tbody>
+              ${scansRows||'<tr><td colspan="3">No scans</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+        <h5>Recharges</h5>
+        <div class="table-container">
+          <table class="table table-striped">
+            <thead><tr><th>Date & Time</th><th>Option</th><th>Amount</th><th>Method</th><th>Remarks</th></tr></thead>
+            <tbody>
+              ${rechsRows||'<tr><td colspan="5">No recharges</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  resultDiv.innerHTML=html;
+}
+
+function generateReport(e) {
+  e.preventDefault();
+  const rType = document.getElementById("reportType").value;
+  const sDate = new Date(document.getElementById("startDate").value);
+  const eDate = new Date(document.getElementById("endDate").value);
+  if(sDate>eDate) {
+    showAlert('error','Invalid Range','Start must be <= End');
+    return;
+  }
+  let filtered=[];
+  let out='';
+
+  switch(rType) {
+    case 'financial':
+      {
+        const pass = prompt('Enter passkey for financial(cash) report:');
+        if(pass!=='4613'){
+          showAlert('error','Denied','Wrong passkey');
+          return;
+        }
+        filtered = recharges.filter(r=>{
+          const dt=new Date(r.date);
+          return dt>=sDate && dt<=eDate && r.method==='cash';
         });
+        out = `
+          <h4>Financial (Cash) Report</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>User</th><th>Date & Time</th><th>Amount</th></tr></thead>
+              <tbody>
+                ${
+                  filtered.map(r=>`
+                    <tr>
+                      <td>${r.userId}</td>
+                      <td>${r.date}</td>
+                      <td>AED ${r.amount}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
+    case 'lowBalance':
+      {
+        filtered = users.filter(u=>u.balance<10);
+        out=`
+          <h4>Low Balance (<10)</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>User ID</th><th>Name</th><th>Balance</th></tr></thead>
+              <tbody>
+                ${
+                  filtered.map(u=>`
+                    <tr>
+                      <td>${u.id}</td>
+                      <td>${u.name}</td>
+                      <td>${u.balance.toFixed(2)}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
+    case 'expiredCards':
+      {
+        filtered = users.filter(u=> new Date(u.idExpiration)<new Date());
+        out=`
+          <h4>Expired Cards</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>User</th><th>Name</th><th>Expiration</th></tr></thead>
+              <tbody>
+                ${
+                  filtered.map(u=>`
+                    <tr>
+                      <td>${u.id}</td>
+                      <td>${u.name}</td>
+                      <td>${u.idExpiration}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
+    case 'whiteSummary':
+      {
+        filtered = users.filter(u=>u.remarks==='White Card');
+        out=`
+          <h4>White Cards Summary</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>User</th><th>Name</th><th>Issue Date</th><th>Expiration</th></tr></thead>
+              <tbody>
+                ${
+                  filtered.map(u=>`
+                    <tr>
+                      <td>${u.id}</td>
+                      <td>${u.name}</td>
+                      <td>${u.issueDate||'-'}</td>
+                      <td>${u.idExpiration}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
+    case 'cashTransactions':
+      {
+        const pass = prompt('Enter passkey for cash transactions:');
+        if(pass!=='4613'){
+          showAlert('error','Denied','Wrong passkey');
+          return;
+        }
+        filtered = recharges.filter(r=>{
+          const dt = new Date(r.date);
+          return dt>=sDate && dt<=eDate && r.method==='cash';
+        });
+        out=`
+          <h4>Cash Transactions</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>Tx ID</th><th>User</th><th>Date & Time</th><th>Amount</th></tr></thead>
+              <tbody>
+                ${
+                  filtered.map((r,i)=>`
+                    <tr>
+                      <td>TX${1000+i}</td>
+                      <td>${r.userId}</td>
+                      <td>${r.date}</td>
+                      <td>AED ${r.amount}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
+    case 'cardTransactions':
+      {
+        filtered = scans.filter(s=>{
+          const dt=new Date(s.timestamp);
+          return dt>=sDate && dt<=eDate;
+        });
+        out=`
+          <h4>Card Transactions (Scans)</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>User ID</th><th>Timestamp</th><th>In Time</th><th>Date</th><th>Bus No.</th></tr></thead>
+              <tbody>
+                ${
+                  filtered.map(s=>`
+                    <tr>
+                      <td>${s.userId}</td>
+                      <td>${s.timestamp}</td>
+                      <td>${s.inTime||'-'}</td>
+                      <td>${s.dateStr||'-'}</td>
+                      <td>${s.busNo||'Citizen 1'}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
+    default:
+      out='<p>No valid report selected.</p>';
+  }
+  document.getElementById("reportResult").innerHTML=out;
+}
 
-        // Event Handlers
-        const registerUser = (event) => {
-            event.preventDefault();
-            const userId = document.getElementById("userId").value;
-            const fullName = document.getElementById("fullName").value;
-            const location = document.getElementById("location").value;
-            const country = document.getElementById("country").value;
-            const contact = document.getElementById("contact").value;
-            const idExpiration = document.getElementById("idExpiration").value;
-            const isWhiteCard = document.getElementById("whiteCard").checked;
 
-            if (!validateUserInput({ userId, fullName, location, country, contact, idExpiration })) return;
-            if (!validateExpirationDate(idExpiration, isWhiteCard)) return;
+function toggleExpirationDate() {
+  const cType = document.getElementById("cardType");
+  const idExp = document.getElementById("idExpiration");
+  if (cType.value==='white') {
+    idExp.value='';
+    idExp.min = new Date().toISOString().split('T')[0];
+  } else {
+    setDefaultExpiration();
+  }
+}
 
-            const user = {
-                id: userId,
-                name: fullName,
-                location,
-                country,
-                contact,
-                idExpiration,
-                balance: 0,
-                remarks: isWhiteCard ? 'White Card' : 'EID Card'
-            };
 
-            users.push(user);
-            logAction('User Registered', user);
-            showAlert('success', 'User Registered', 'User added successfully!');
-            switchTab('cards');
-        };
+document.addEventListener("DOMContentLoaded", ()=>{
+  switchTab('home');
+});
 
-        const rechargeUser = (event) => {
-            event.preventDefault();
-            const userId = document.getElementById("rechargeUserId").value;
-            const rechargeOption = document.getElementById("rechargeOption").value;
-            const paymentMethod = document.getElementById("paymentMethod").value;
 
-            const user = users.find(u => u.id === userId);
-            if (!user) {
-                showAlert('error', 'Recharge Failed', 'User does not exist.');
-                return;
-            }
 
-            const daysToAdd = parseInt(rechargeOption);
-            user.balance += daysToAdd;
-
-            const recharge = {
-                userId,
-                date: new Date().toLocaleDateString(),
-                method: paymentMethod,
-                option: daysToAdd
-            };
-
-            recharges.push(recharge);
-            logAction('User Recharged', recharge);
-            showAlert('success', 'Recharge Successful', `Added ${daysToAdd} days to user balance.`);
-            switchTab('history');
-        };
-
-        const scanCard = (event) => {
-            event.preventDefault();
-            const userId = document.getElementById("scanUserId").value;
-            const user = users.find(u => u.id === userId);
-
-            if (!user) {
-                showAlert('error', 'Unregistered Card', 'This card is not registered.');
-                return;
-            }
-
-            const todayScans = scans.filter(scan => scan.userId === userId && new Date(scan.timestamp).toDateString() === new Date().toDateString());
-            if (todayScans.length >= 2) {
-                showAlert('error', 'Scan Limit Reached', 'Daily scan limit reached for this card.');
-                return;
-            }
-
-            user.balance -= 0.5; // Each scan reduces 0.5 days
-
-            const scan = {
-                userId,
-                timestamp: new Date().toLocaleString()
-            };
-
-            scans.push(scan);
-            logAction('Card Scanned', scan);
-            showAlert('success', 'Scan Successful', `Card scanned. Remaining balance: ${user.balance} days.`);
-        };
-    </script>
+  </script>
 </body>
-
 </html>
