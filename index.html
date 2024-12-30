@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etra - Card Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <header>Etra - Card Management System</header>
+
+    <nav>
+        <a href="#home" onclick="switchTab('home')">Home</a>
+        <a href="#registration" onclick="switchTab('registration')">User Registration</a>
+        <a href="#cards" onclick="switchTab('cards')">Card Management</a>
+        <a href="#recharge" onclick="switchTab('recharge')">Recharge</a>
+        <a href="#history" onclick="switchTab('history')">History</a>
+        <a href="#scan" onclick="switchTab('scan')">Scan</a>
+        <a href="#reports" onclick="switchTab('reports')">Reports</a>
+    </nav>
+
+    <div id="content-container">
+        <!-- Dynamic Content Will Be Loaded Here -->
+    </div>
+
+    <footer>Etra Card Management System &copy; 2024</footer>
+
+    <script>
+        // Global state to simulate database
+        const users = [];
+        const scans = [];
+        const recharges = [];
+        const logbook = [];
+
+        // Helper Functions
+        const renderContent = (html) => {
+            const container = document.getElementById("content-container");
+            container.innerHTML = html;
+        };
+
+        const showAlert = (type, title, message) => {
+            Swal.fire({
+                icon: type,
+                title: title,
+                text: message,
+                confirmButtonColor: type === 'error' ? '#d33' : '#3085d6'
+            });
+        };
+
+        const validateUserInput = (fields) => {
+            for (const [key, value] of Object.entries(fields)) {
+                if (!value) {
+                    showAlert('error', 'Validation Error', `${key} is required.`);
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        const validateExpirationDate = (date, isWhiteCard = false) => {
+            const today = new Date();
+            const expiration = new Date(date);
+            const diffDays = (expiration - today) / (1000 * 60 * 60 * 24);
+
+            if (isWhiteCard && diffDays > 30) {
+                showAlert('error', 'Invalid Expiration', 'White cards cannot have validity greater than 30 days.');
+                return false;
+            }
+
+            if (!isWhiteCard && diffDays < 45) {
+                showAlert('error', 'Invalid Expiration', 'Expiration date must be at least 45 days in the future.');
+                return false;
+            }
+
+            return true;
+        };
+
+        const logAction = (actionType, details) => {
+            logbook.push({
+                timestamp: new Date().toLocaleString(),
+                actionType,
+                details
+            });
+        };
+
+        const updateTable = (tableId, data, columns) => {
+            const table = document.getElementById(tableId);
+            table.innerHTML = '';
+
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            columns.forEach((col) => {
+                const th = document.createElement('th');
+                th.innerText = col;
+                trHead.appendChild(th);
+            });
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            data.forEach((row) => {
+                const tr = document.createElement('tr');
+                columns.forEach((col) => {
+                    const td = document.createElement('td');
+                    td.innerText = row[col] || '-';
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+        };
+
+        // Tab Rendering Functions
+        const tabs = {
+            home: () => {
+                renderContent(`
+                    <h2>Dashboard Overview</h2>
+                    <div>
+                        <p>Total Users: ${users.length}</p>
+                        <p>Total Balance: ${users.reduce((sum, user) => sum + user.balance, 0)} days</p>
+                        <p>Expiring IDs in 45 days: ${users.filter(user => new Date(user.idExpiration) < new Date(new Date().setDate(new Date().getDate() + 45))).length}</p>
+                        <p>Low Balance Users: ${users.filter(user => user.balance < 10).length}</p>
+                        <canvas id="balanceChart"></canvas>
+                    </div>
+                `);
+
+                const ctx = document.getElementById('balanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: users.map(user => user.name),
+                        datasets: [{
+                            label: 'Balance (days)',
+                            data: users.map(user => user.balance),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            },
+            registration: () => {
+                renderContent(`
+                    <h2>User Registration</h2>
+                    <form onsubmit="registerUser(event)">
+                        <label>User ID: <input type="text" id="userId"></label><br>
+                        <label>Full Name: <input type="text" id="fullName"></label><br>
+                        <label>Location: <input type="text" id="location"></label><br>
+                        <label>Country: <input type="text" id="country"></label><br>
+                        <label>Contact Number: <input type="text" id="contact"></label><br>
+                        <label>ID Expiration Date: <input type="date" id="idExpiration"></label><br>
+                        <label>White Card: <input type="checkbox" id="whiteCard"></label><br>
+                        <button type="submit">Register</button>
+                    </form>
+                `);
+            },
+            cards: () => {
+                renderContent(`
+                    <h2>Card Management</h2>
+                    <table id="cardTable" border="1"></table>
+                `);
+                updateTable('cardTable', users, ['id', 'name', 'balance', 'idExpiration', 'remarks']);
+            },
+            recharge: () => {
+                renderContent(`
+                    <h2>Recharge</h2>
+                    <form onsubmit="rechargeUser(event)">
+                        <label>User ID: <input type="text" id="rechargeUserId"></label><br>
+                        <label>Recharge Option:
+                            <select id="rechargeOption">
+                                <option value="10">10 Days - AED 50</option>
+                                <option value="15">15 Days - AED 75</option>
+                                <option value="30">30 Days + 5 Grace - AED 125</option>
+                                <option value="daily">Daily Pass - AED 10</option>
+                            </select>
+                        </label><br>
+                        <label>Payment Method:
+                            <select id="paymentMethod">
+                                <option value="card">Card</option>
+                                <option value="cash">Cash</option>
+                            </select>
+                        </label><br>
+                        <button type="submit">Recharge</button>
+                    </form>
+                `);
+            },
+            history: () => {
+                renderContent(`
+                    <h2>History</h2>
+                    <div>
+                        <h3>Travel History</h3>
+                        <table id="travelHistory" border="1"></table>
+                    </div>
+                    <div>
+                        <h3>Recharge History</h3>
+                        <table id="rechargeHistory" border="1"></table>
+                    </div>
+                `);
+                updateTable('travelHistory', scans, ['userId', 'timestamp', 'entry', 'exit']);
+                updateTable('rechargeHistory', recharges, ['userId', 'date', 'method', 'option']);
+            },
+            scan: () => {
+                renderContent(`
+                    <h2>Scan</h2>
+                    <form onsubmit="scanCard(event)">
+                        <label>Scan Method:
+                            <select id="scanMethod">
+                                <option value="manual">Manual</option>
+                                <option value="qr">QR Code</option>
+                            </select>
+                        </label><br>
+                        <label>User ID: <input type="text" id="scanUserId"></label><br>
+                        <button type="submit">Scan</button>
+                    </form>
+                `);
+            },
+            reports: () => {
+                renderContent(`
+                    <h2>Reports</h2>
+                    <form id="reportFilter">
+                        <select id="reportType">
+                            <option value="financial">Financial Report</option>
+                            <option value="lowBalance">Low Balance</option>
+                            <option value="expiredCards">Expired Cards</option>
+                        </select>
+                        <button type="submit">Generate</button>
+                    </form>
+                    <table id="reportTable" border="1"></table>
+                `);
+                document.getElementById('reportFilter').onsubmit = (e) => {
+                    e.preventDefault();
+                    const reportType = document.getElementById('reportType').value;
+                    if (reportType === 'financial') {
+                        const passkey = prompt('Enter Passkey to View Cash Payments:');
+                        if (passkey !== '4613') {
+                            showAlert('error', 'Access Denied', 'Invalid Passkey!');
+                            return;
+                        }
+                    }
+                    updateTable('reportTable', users, ['id', 'name', 'balance', 'idExpiration']); // Placeholder
+                };
+            },
+        };
+
+        // Navigation
+        const switchTab = (tabId) => {
+            if (tabs[tabId]) tabs[tabId]();
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            switchTab("home");
+        });
+
+        // Event Handlers
+        const registerUser = (event) => {
+            event.preventDefault();
+            const userId = document.getElementById("userId").value;
+            const fullName = document.getElementById("fullName").value;
+            const location = document.getElementById("location").value;
+            const country = document.getElementById("country").value;
+            const contact = document.getElementById("contact").value;
+            const idExpiration = document.getElementById("idExpiration").value;
+            const isWhiteCard = document.getElementById("whiteCard").checked;
+
+            if (!validateUserInput({ userId, fullName, location, country, contact, idExpiration })) return;
+            if (!validateExpirationDate(idExpiration, isWhiteCard)) return;
+
+            const user = {
+                id: userId,
+                name: fullName,
+                location,
+                country,
+                contact,
+                idExpiration,
+                balance: 0,
+                remarks: isWhiteCard ? 'White Card' : 'EID Card'
+            };
+
+            users.push(user);
+            logAction('User Registered', user);
+            showAlert('success', 'User Registered', 'User added successfully!');
+            switchTab('cards');
+        };
+
+        const rechargeUser = (event) => {
+            event.preventDefault();
+            const userId = document.getElementById("rechargeUserId").value;
+            const rechargeOption = document.getElementById("rechargeOption").value;
+            const paymentMethod = document.getElementById("paymentMethod").value;
+
+            const user = users.find(u => u.id === userId);
+            if (!user) {
+                showAlert('error', 'Recharge Failed', 'User does not exist.');
+                return;
+            }
+
+            const daysToAdd = parseInt(rechargeOption);
+            user.balance += daysToAdd;
+
+            const recharge = {
+                userId,
+                date: new Date().toLocaleDateString(),
+                method: paymentMethod,
+                option: daysToAdd
+            };
+
+            recharges.push(recharge);
+            logAction('User Recharged', recharge);
+            showAlert('success', 'Recharge Successful', `Added ${daysToAdd} days to user balance.`);
+            switchTab('history');
+        };
+
+        const scanCard = (event) => {
+            event.preventDefault();
+            const userId = document.getElementById("scanUserId").value;
+            const user = users.find(u => u.id === userId);
+
+            if (!user) {
+                showAlert('error', 'Unregistered Card', 'This card is not registered.');
+                return;
+            }
+
+            const todayScans = scans.filter(scan => scan.userId === userId && new Date(scan.timestamp).toDateString() === new Date().toDateString());
+            if (todayScans.length >= 2) {
+                showAlert('error', 'Scan Limit Reached', 'Daily scan limit reached for this card.');
+                return;
+            }
+
+            user.balance -= 0.5; // Each scan reduces 0.5 days
+
+            const scan = {
+                userId,
+                timestamp: new Date().toLocaleString()
+            };
+
+            scans.push(scan);
+            logAction('Card Scanned', scan);
+            showAlert('success', 'Scan Successful', `Card scanned. Remaining balance: ${user.balance} days.`);
+        };
+    </script>
+</body>
+
+</html>
