@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
 
-  -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Etra CITIZEN - Extreme UI</title>
+  <title>Etra CITIZEN - Extreme UI (Blocked/Frozen Logic & Refund Reports)</title>
 
 
   <link 
@@ -30,28 +29,26 @@
     src="https://cdn.jsdelivr.net/npm/sweetalert2@11"
   ></script>
 
-  
+
   <script
     defer
     src="https://cdn.jsdelivr.net/npm/chart.js"
   ></script>
 
-
   <style>
-
+ 
   html, body {
-    margin: 0; padding: 0;
+    margin: 0; 
+    padding: 0;
     overflow: hidden; /* no global scroll */
     font-family: 'Roboto', sans-serif;
     background-color: #f4f5f7;
   }
-
   body {
     display: flex;
     flex-direction: column;
     height: 100vh;
   }
-
   header {
     background: linear-gradient(to right, #232526, #414345);
     color: #fff;
@@ -59,14 +56,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-shrink: 0; /* don't shrink header */
+    flex-shrink: 0;
   }
-
   .header-left .navbar-brand {
     font-weight: bold;
     font-size: 1.3rem;
   }
-
   .header-right .nav-link {
     color: #ccc;
     margin-left: 18px;
@@ -81,9 +76,8 @@
     text-decoration: none;
   }
 
-  /* MAIN CONTENT WRAPPER: SCROLL ONLY INSIDE IT */
   .content-wrapper {
-    flex: 1; /* take remaining space */
+    flex: 1;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -96,28 +90,26 @@
     height: 100%;
   }
 
-  /* FOOTER: FIXED at bottom */
   footer {
     background: #e9ecef;
     color: #333;
     text-align: center;
     padding: 10px 20px;
-    flex-shrink: 0; /* don't shrink footer */
+    flex-shrink: 0;
     font-size: 0.9rem;
   }
 
+
   .insights-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    /* On smaller screens, we might do 1 column */
   }
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     .insights-container {
-      grid-template-columns: 1fr; 
+      grid-template-columns: 1fr;
     }
   }
-
   .insight-card {
     position: relative;
     height: 180px;
@@ -129,14 +121,11 @@
     flex-direction: column;
     justify-content: space-between;
     transition: transform 0.4s ease-in-out;
-    cursor: pointer; /* to indicate clickable for swap */
+    cursor: pointer;
   }
-
   .insight-card:hover {
     transform: scale(1.02);
   }
-
-  /* Card Title & Value styles */
   .insight-title {
     font-size: 18px;
     font-weight: 600;
@@ -145,42 +134,10 @@
     font-size: 28px;
     font-weight: 700;
   }
-
-  /* 4 gradient cards (2 visible, 2 hidden) */
-  .gradient1 {
-    background: linear-gradient(to right, #36D1DC, #5B86E5); /* turquoise/blue */
-  }
-  .gradient2 {
-    background: linear-gradient(to right, #C02425, #F0CB35); /* red/gold */
-  }
-  .gradient3 {
-    background: linear-gradient(to right, #00B09B, #96C93D); /* teal/green */
-  }
-  .gradient4 {
-    background: linear-gradient(to right, #f953c6, #b91d73); /* pink/purple */
-  }
-
-  /* HIDDEN CARDS get display none initially, or we manage them via JS. */
-  .insight-card.hidden {
-    display: none;
-  }
-
-
-  .swap-in {
-    animation: swapIn 0.4s forwards;
-  }
-  .swap-out {
-    animation: swapOut 0.4s forwards;
-  }
-
-  @keyframes swapIn {
-    0% { opacity: 0; transform: rotateY(90deg); }
-    100% { opacity: 1; transform: rotateY(0deg); }
-  }
-  @keyframes swapOut {
-    0% { opacity: 1; transform: rotateY(0deg); }
-    100% { opacity: 0; transform: rotateY(90deg); }
-  }
+  .gradient1 { background: linear-gradient(to right, #36D1DC, #5B86E5); }
+  .gradient2 { background: linear-gradient(to right, #C02425, #F0CB35); }
+  .gradient3 { background: linear-gradient(to right, #00B09B, #96C93D); }
+  .gradient4 { background: linear-gradient(to right, #f953c6, #b91d73); }
 
 
   .charts-section {
@@ -191,15 +148,14 @@
   }
   @media (max-width: 768px) {
     .charts-section {
-      grid-template-columns: 1fr; 
+      grid-template-columns: 1fr;
     }
   }
-
   .chart-card {
     background: #fff;
     border-radius: 10px;
     padding: 20px;
-    height: 320px; /* fixed to avoid overflow */
+    height: 320px;
     position: relative;
   }
   .chart-card .chart-title {
@@ -207,13 +163,11 @@
     font-weight: 600;
     margin-bottom: 8px;
   }
-
-  #cardTypeChart,
+  #cardTypeChart, 
   #statusChart {
     width: 100% !important;
-    height: 220px !important; /* keep it from overflowing */
+    height: 220px !important;
   }
-
   .chart-placeholder {
     text-align: center;
     margin-top: 30px;
@@ -241,17 +195,36 @@
     background: #eee;
   }
 
+
   .table-container {
     max-height: 280px;
     overflow-y: auto;
   }
 
 
+  .profile-card {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+  .profile-card-header {
+    background: linear-gradient(to right, #232526, #414345);
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
+    margin: -20px -20px 20px -20px;
+  }
+  .profile-card-header h5 {
+    margin: 0;
+  }
+
+   *************************************************************/
   </style>
 </head>
 
 <body>
-
+  
   <header>
     <div class="header-left d-flex align-items-center">
       <a class="navbar-brand text-white" href="#">
@@ -292,32 +265,35 @@
 
   <div class="content-wrapper">
     <div class="content-inner" id="content-container">
-      <!-- Dynamic content loaded via JS tabs -->
+      <!-- Dynamic content rendered by JS -->
     </div>
   </div>
+
 
   <footer>
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <a href="#" class="text-decoration-none me-2">Demo</a>
-        <a href="#" class="text-decoration-none me-2">Version</a>
+        <a href="#" class="text-decoration-none me-2">Help</a>
+        <a href="#" class="text-decoration-none me-2">Contact</a>
       </div>
       <small class="text-muted">Etra CITIZEN System &copy; 2024. All Rights Reserved.</small>
     </div>
   </footer>
 
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-  ></script>
+  <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+  </script>
 
   <script>
 
-const LOCALSTORAGE_KEY = 'etraCitizenExtreme_v4';
+const LOCALSTORAGE_KEY = 'etraCitizenExtreme_v5';
 let users = [];
 let scans = [];
 let recharges = [];
 let logbook = [];
+let refunds = []; // We store refund records separately for easy reporting
+
 
 function loadDataFromLocalStorage() {
   try {
@@ -328,21 +304,27 @@ function loadDataFromLocalStorage() {
       if (data.scans) scans = data.scans;
       if (data.recharges) recharges = data.recharges;
       if (data.logbook) logbook = data.logbook;
+      if (data.refunds) refunds = data.refunds;
     }
   } catch(e) {
-    console.error('Error loading localStorage data:', e);
+    console.error('Error loading localStorage:', e);
+  }
+}
+function saveDataToLocalStorage() {
+  try {
+    const data = {
+      users,
+      scans,
+      recharges,
+      logbook,
+      refunds
+    };
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(data));
+  } catch(e) {
+    console.error('Error saving localStorage:', e);
   }
 }
 
-function saveDataToLocalStorage() {
-  try {
-    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify({
-      users, scans, recharges, logbook
-    }));
-  } catch(e) {
-    console.error('Error saving localStorage data:', e);
-  }
-}
 
 function showAlert(type, title, text) {
   Swal.fire({
@@ -375,9 +357,9 @@ function showToast(message, title='Notification', color='bg-primary') {
 }
 
 function validateUserInput(fields) {
-  for (let [key, val] of Object.entries(fields)) {
-    if (!val) {
-      showAlert('error','Validation Error', `${key} is required.`);
+  for (let [key,val] of Object.entries(fields)) {
+    if (!val && val!==false) { // allow false boolean
+      showAlert('error','Validation Error',`${key} is required.`);
       return false;
     }
   }
@@ -389,7 +371,7 @@ function validateExpirationDate(dateStr, isWhite) {
   const exp = new Date(dateStr);
   const diff = (exp - now)/(1000*60*60*24);
   if (isWhite && diff>30) {
-    showAlert('error','Invalid Exp','White card max 30 days.');
+    showAlert('error','Invalid Exp','White card max 30 days from now.');
     return false;
   }
   if (!isWhite && diff<45) {
@@ -409,9 +391,8 @@ function logAction(type, details) {
 }
 
 function getUserBalance(uid) {
-  const u = users.find(x => x.id===uid);
-  if (!u) return '-';
-  return u.balance.toFixed(2);
+  const u = users.find(x=>x.id===uid);
+  return (u) ? u.balance.toFixed(2) : '-';
 }
 
 function searchTable(tableId, searchId) {
@@ -419,82 +400,84 @@ function searchTable(tableId, searchId) {
   const filter = input.value.toLowerCase();
   const table = document.getElementById(tableId);
   const rows = table.getElementsByTagName("tr");
-  for(let i=1; i<rows.length; i++) {
-    let show = false;
+  for (let i=1; i<rows.length; i++){
+    let show=false;
     const tds = rows[i].getElementsByTagName("td");
-    for(let j=0; j<tds.length; j++){
-      if (tds[j].innerText.toLowerCase().includes(filter)) {
-        show = true; break;
+    for (let j=0; j<tds.length; j++){
+      if (tds[j].innerText.toLowerCase().includes(filter)){
+        show=true; break;
       }
     }
-    rows[i].style.display = show ? '' : 'none';
+    rows[i].style.display = show?'':'none';
   }
 }
-
 
 function setDefaultExpiration() {
   const cType = document.getElementById("cardType");
   const expElem = document.getElementById("idExpiration");
   if (!cType || !expElem) return;
-
-  const offset = (cType.value==='white') ? 30 : 45;
+  const offset = (cType.value==='white')?30:45;
   const dt = new Date();
   dt.setDate(dt.getDate()+offset);
   expElem.value = dt.toISOString().split('T')[0];
 }
 
 
+loadDataFromLocalStorage();
+
+
+let visibleCards = ['totalUsers','totalBalance'];
+function swapCard(cardKey) {
+  const allCards = ['totalUsers','totalBalance','expiring','lowBalance'];
+  const hiddenSet = allCards.filter(x=> !visibleCards.includes(x));
+  const idx = visibleCards.indexOf(cardKey);
+  if (idx<0) return;
+  visibleCards.splice(idx,1);
+  const newCard = hiddenSet[0];
+  visibleCards.push(newCard);
+  tabs.home();
+}
+
+/*******************************************************************
+ * 5. TAB NAVIGATION
+ *******************************************************************/
 function switchTab(tabId) {
-  document.querySelectorAll('.header-right .nav-link').forEach(link => {
-    const href = link.getAttribute('href')||'';
+  document.querySelectorAll('.header-right .nav-link').forEach(link=>{
+    const href=link.getAttribute('href')||'';
     const linkTab = href.replace('#','');
     if (linkTab===tabId) link.classList.add('active');
     else link.classList.remove('active');
   });
-
-  if (tabs[tabId]) {
-    tabs[tabId]();
-  }
+  if (tabs[tabId]) tabs[tabId]();
 }
 
 function renderContent(html) {
-  const cont = document.getElementById("content-container");
-  cont.innerHTML = html;
-}
-
-
-let visibleCards = ['totalUsers','totalBalance']; 
-
-
-function swapCard(cardKey) {
-
-  const hiddenSet = ['totalUsers','totalBalance','expiring','lowBalance'].filter(x => !visibleCards.includes(x));
-
-  const idx = visibleCards.indexOf(cardKey);
-  if (idx<0) return; 
-  visibleCards.splice(idx,1); 
-
-  const newCard = hiddenSet[0];
-  visibleCards.push(newCard);
-
-  tabs.home();
+  const container = document.getElementById("content-container");
+  container.innerHTML = html;
 }
 
 
 const tabs = {
   home: () => {
-    // We'll gather stats
+    // Stats
     const totalUsers = users.length;
     const totalBal = users.reduce((acc,u)=>acc+u.balance,0).toFixed(2);
     const expiringCount = users.filter(u=>{
       const d = new Date(u.idExpiration);
-      let limit = new Date();
-      limit.setDate(limit.getDate()+45);
+      const limit=new Date(); limit.setDate(limit.getDate()+45);
       return d<limit;
     }).length;
     const lowBalCount = users.filter(u=>u.balance<10).length;
 
-    // We'll define a dictionary for each card
+    // Additional fields for charts
+    const whiteCount = users.filter(u=>u.remarks==='White Card').length;
+    const eidCount   = users.filter(u=>u.remarks==='EID Card').length;
+
+    const activeCount = users.filter(u=>u.status==='Active').length;
+    const blockedCount = users.filter(u=>u.status==='Blocked').length;
+    const frozenCount = users.filter(u=>u.status==='Frozen').length;
+
+    // We'll have 'visibleCards' with keys => build them
     const cardData = {
       totalUsers: {
         title: 'Total Users',
@@ -521,30 +504,21 @@ const tabs = {
         icon: 'fa-exclamation-triangle'
       }
     };
-
-    // We'll build the HTML for the 2 visible cards
-    let cardsHtml = '';
-    visibleCards.forEach(key => {
-      const d = cardData[key];
-      cardsHtml += `
-        <div class="insight-card ${d.gradient}" onclick="swapCard('${key}')">
+    let cardsHtml='';
+    visibleCards.forEach(key=>{
+      let c=cardData[key];
+      cardsHtml+=`
+        <div class="insight-card ${c.gradient}" onclick="swapCard('${key}')">
           <div>
-            <div class="insight-title">${d.title}</div>
-            <div class="insight-value">${d.value}</div>
+            <div class="insight-title">${c.title}</div>
+            <div class="insight-value">${c.value}</div>
           </div>
-          <i class="fas ${d.icon} fa-4x" style="opacity:0.15; position:absolute; bottom:10px; right:10px;"></i>
+          <i class="fas ${c.icon} fa-4x" style="opacity:0.15; position:absolute; bottom:10px; right:10px;"></i>
         </div>
       `;
     });
 
-    // The rest is the charts
-    // We'll do card type & status
-    const whiteCount = users.filter(u=>u.remarks==='White Card').length;
-    const eidCount   = users.filter(u=>u.remarks==='EID Card').length;
-    const activeCount = users.filter(u=>u.status!=='Frozen').length;
-    const frozenCount = users.filter(u=>u.status==='Frozen').length;
-
-    let homeHtml = `
+    let homeHtml=`
       <div class="insights-container">
         ${cardsHtml}
       </div>
@@ -552,64 +526,60 @@ const tabs = {
         <div class="chart-card">
           <div class="chart-title">Card Type Distribution</div>
           <canvas id="cardTypeChart" width="400" height="220"></canvas>
-          <div id="cardTypePlaceholder" class="chart-placeholder" style="display:none;">
-            No data available. Add cards to populate the chart.
-          </div>
+          <div id="cardTypePlaceholder" class="chart-placeholder" style="display:none;">No data available.</div>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Status Distribution</div>
+          <div class="chart-title">Status Distribution (Active / Blocked / Frozen)</div>
           <canvas id="statusChart" width="400" height="220"></canvas>
-          <div id="statusPlaceholder" class="chart-placeholder" style="display:none;">
-            No data available. Add cards to populate the chart.
-          </div>
+          <div id="statusPlaceholder" class="chart-placeholder" style="display:none;">No data available.</div>
         </div>
       </div>
     `;
-
     renderContent(homeHtml);
 
-    // Build card type chart
+    // Chart Type
     const ctc = document.getElementById('cardTypeChart');
-    let hasAnyCard = (whiteCount+eidCount)>0;
+    const hasAnyCard = (whiteCount+eidCount)>0;
     if (hasAnyCard) {
       new Chart(ctc, {
         type: 'doughnut',
-        data: {
-          labels: ['EID','White'],
-          datasets: [{
-            data: [eidCount,whiteCount],
-            backgroundColor: ['#3498db','#f1c40f']
+        data:{
+          labels:['EID','White'],
+          datasets:[{
+            data:[eidCount, whiteCount],
+            backgroundColor:['#3498db','#f1c40f']
           }]
         },
-        options: { maintainAspectRatio:false }
+        options:{ maintainAspectRatio:false }
       });
     } else {
       document.getElementById('cardTypePlaceholder').style.display='block';
       ctc.style.display='none';
     }
 
-    const stc = document.getElementById('statusChart');
-    let hasAnyStatus = (activeCount+frozenCount)>0;
-    if (hasAnyStatus) {
-      new Chart(stc, {
-        type: 'pie',
-        data: {
-          labels: ['Active','Frozen'],
-          datasets: [{
-            data: [activeCount,frozenCount],
-            backgroundColor: ['#1abc9c','#e056fd']
+    // Status Chart
+    const sc = document.getElementById('statusChart');
+    const hasAnyStatus=(activeCount+blockedCount+frozenCount)>0;
+    if (hasAnyStatus){
+      new Chart(sc, {
+        type:'pie',
+        data:{
+          labels:['Active','Blocked','Frozen'],
+          datasets:[{
+            data:[activeCount,blockedCount,frozenCount],
+            backgroundColor:['#2ecc71','#e74c3c','#e056fd']
           }]
         },
-        options: { maintainAspectRatio:false }
+        options:{ maintainAspectRatio:false }
       });
     } else {
       document.getElementById('statusPlaceholder').style.display='block';
-      stc.style.display='none';
+      sc.style.display='none';
     }
   },
 
   registration: () => {
-    let html = `
+    let html=`
       <h2><i class="fas fa-user-plus me-2"></i>User Registration</h2>
       <form onsubmit="registerUser(event)">
         <div class="row g-3">
@@ -622,16 +592,8 @@ const tabs = {
             <input type="text" class="form-control" id="fullName" required />
           </div>
           <div class="col-md-6">
-            <label class="form-label">Location</label>
-            <input type="text" class="form-control" id="location" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Country</label>
-            <input type="text" class="form-control" id="country" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Contact Number</label>
-            <input type="tel" class="form-control" id="contact" required />
+            <label class="form-label">Emirates ID No.</label>
+            <input type="text" class="form-control" id="emiratesIdNo" />
           </div>
           <div class="col-md-6">
             <label class="form-label">Card Type</label>
@@ -647,6 +609,27 @@ const tabs = {
           <div class="col-md-6">
             <label class="form-label">Remarks</label>
             <textarea class="form-control" id="remarks" rows="2"></textarea>
+          </div>
+          <!-- Additional fields as example -->
+          <div class="col-md-6">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-control" id="companyName"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Store Name</label>
+            <input type="text" class="form-control" id="storeName"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Pick Location</label>
+            <input type="text" class="form-control" id="pickLocation"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Online Company</label>
+            <input type="checkbox" class="form-check-input ms-2" id="onlineCompany"/>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label">Block Card</label>
+            <input type="checkbox" class="form-check-input ms-2" id="blockCard"/>
           </div>
         </div>
         <div class="mt-3">
@@ -664,19 +647,54 @@ const tabs = {
   },
 
   cards: () => {
-    // same as previous approach
-    const eidRows = users.filter(u=>u.remarks==='EID Card').map(u=>`
+    // We'll show "Active", "Blocked", "Frozen"
+    const activeRows = users.filter(u=>u.status==='Active').map(u=>`
       <tr>
         <td>${u.id}</td>
         <td>${u.name}</td>
-        <td>${u.contact}</td>
+        <td>${u.emiratesIdNo||'-'}</td>
         <td>${u.idExpiration}</td>
-        <td>${u.status||'Active'}</td>
+        <td>${u.status}</td>
         <td>
-          <button class="btn btn-sm btn-warning" onclick="freezeCard('${u.id}')">
+          <button class="btn btn-sm btn-danger me-1" onclick="blockCard('${u.id}')">Block</button>
+          <button class="btn btn-sm btn-warning me-1" onclick="freezeCard('${u.id}')">
             <i class="fas fa-snowflake"></i>
           </button>
-          <button class="btn btn-sm btn-success" onclick="unfreezeCard('${u.id}')">
+          <button class="btn btn-sm btn-info" onclick="viewHistory('${u.id}')">
+            <i class="fas fa-history"></i>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    const blockedRows = users.filter(u=>u.status==='Blocked').map(u=>`
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.emiratesIdNo||'-'}</td>
+        <td>${u.idExpiration}</td>
+        <td>${u.status}</td>
+        <td>
+          <button class="btn btn-sm btn-success me-1" onclick="unblockCard('${u.id}')">Unblock</button>
+          <button class="btn btn-sm btn-info" onclick="viewHistory('${u.id}')">
+            <i class="fas fa-history"></i>
+          </button>
+          <button class="btn btn-sm btn-secondary" onclick="refundCard('${u.id}')">
+            Refund
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    const frozenRows = users.filter(u=>u.status==='Frozen').map(u=>`
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.emiratesIdNo||'-'}</td>
+        <td>${u.idExpiration}</td>
+        <td>${u.status}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-1" onclick="unfreezeCard('${u.id}')">
             <i class="fas fa-undo"></i>
           </button>
           <button class="btn btn-sm btn-info" onclick="viewHistory('${u.id}')">
@@ -686,65 +704,55 @@ const tabs = {
       </tr>
     `).join('');
 
-    const whiteRows = users.filter(u=>u.remarks==='White Card').map(u=>`
-      <tr>
-        <td>${u.id}</td>
-        <td>${u.name}</td>
-        <td>${u.contact}</td>
-        <td>${u.issueDate||'-'}</td>
-        <td>${u.idExpiration}</td>
-        <td>${u.status||'Active'}</td>
-        <td>
-          <button class="btn btn-sm btn-warning" onclick="freezeCard('${u.id}')">
-            <i class="fas fa-snowflake"></i>
-          </button>
-          <button class="btn btn-sm btn-success" onclick="unfreezeCard('${u.id}')">
-            <i class="fas fa-undo"></i>
-          </button>
-          <button class="btn btn-sm btn-info" onclick="viewHistory('${u.id}')">
-            <i class="fas fa-history"></i>
-          </button>
-        </td>
-      </tr>
-    `).join('');
-
-    let html = `
+    let html=`
       <h2><i class="fas fa-id-card me-2"></i>Card Management</h2>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabEID">EID Cards</button>
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#activeTab">Active Cards</button>
         </li>
         <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabWhite">White Cards</button>
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#blockedTab">Blocked Cards</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#frozenTab">Frozen Cards</button>
         </li>
       </ul>
       <div class="tab-content mt-3">
-        <div class="tab-pane fade show active" id="tabEID">
-          <input type="text" id="searchEID" class="form-control mb-2" placeholder="Search EID" onkeyup="searchTable('eidTable','searchEID')" />
+        <div class="tab-pane fade show active" id="activeTab">
+          <input type="text" id="searchActive" class="form-control mb-2" placeholder="Search Active" onkeyup="searchTable('activeTable','searchActive')" />
           <div class="table-container">
-            <table class="table table-striped" id="eidTable">
+            <table class="table table-striped" id="activeTable">
               <thead>
-                <tr>
-                  <th>User ID</th><th>Name</th><th>Contact</th><th>Expiration</th><th>Status</th><th>Actions</th>
-                </tr>
+                <tr><th>User ID</th><th>Name</th><th>Emirates ID</th><th>Expiration</th><th>Status</th><th>Actions</th></tr>
               </thead>
               <tbody>
-                ${eidRows}
+                ${activeRows}
               </tbody>
             </table>
           </div>
         </div>
-        <div class="tab-pane fade" id="tabWhite">
-          <input type="text" id="searchWhite" class="form-control mb-2" placeholder="Search White" onkeyup="searchTable('whiteTable','searchWhite')" />
+        <div class="tab-pane fade" id="blockedTab">
+          <input type="text" id="searchBlocked" class="form-control mb-2" placeholder="Search Blocked" onkeyup="searchTable('blockedTable','searchBlocked')" />
           <div class="table-container">
-            <table class="table table-striped" id="whiteTable">
+            <table class="table table-striped" id="blockedTable">
               <thead>
-                <tr>
-                  <th>User ID</th><th>Name</th><th>Contact</th><th>Issue Date</th><th>Expiration</th><th>Status</th><th>Actions</th>
-                </tr>
+                <tr><th>User ID</th><th>Name</th><th>Emirates ID</th><th>Expiration</th><th>Status</th><th>Actions</th></tr>
               </thead>
               <tbody>
-                ${whiteRows}
+                ${blockedRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="frozenTab">
+          <input type="text" id="searchFrozen" class="form-control mb-2" placeholder="Search Frozen" onkeyup="searchTable('frozenTable','searchFrozen')" />
+          <div class="table-container">
+            <table class="table table-striped" id="frozenTable">
+              <thead>
+                <tr><th>User ID</th><th>Name</th><th>Emirates ID</th><th>Expiration</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                ${frozenRows}
               </tbody>
             </table>
           </div>
@@ -755,23 +763,36 @@ const tabs = {
   },
 
   recharge: () => {
-    const recent = recharges.slice(-5).reverse().map(r=>`
-      <tr>
-        <td>${r.userId}</td>
-        <td>${r.date}</td>
-        <td>${r.option}</td>
-        <td>AED ${r.amount}</td>
-        <td>${r.method}</td>
-        <td>${r.remarks||'-'}</td>
-      </tr>
-    `).join('');
-    let html = `
+    let html=`
       <h2><i class="fas fa-credit-card me-2"></i>Recharge</h2>
       <form onsubmit="rechargeUser(event)">
         <div class="row g-3">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label">User ID</label>
-            <input type="text" class="form-control" id="rechargeUserId" required />
+            <input type="text" class="form-control" id="rechargeUserId" required onblur="autoFillRechargeInfo()" />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" id="rechargeUserName" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Emirates ID</label>
+            <input type="text" class="form-control" id="rechargeEmiratesId" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">No. of Days Remaining</label>
+            <input type="text" class="form-control" id="rechargeDaysRemaining" readonly />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Date (Recharge Date)</label>
+            <input type="date" class="form-control" id="rechargeDate" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Payment Made</label>
+            <select class="form-select" id="paymentMethod" required>
+              <option value="online">Online Payment</option>
+              <option value="debit">Debit</option>
+            </select>
           </div>
           <div class="col-md-6">
             <label class="form-label">Recharge Option</label>
@@ -780,13 +801,6 @@ const tabs = {
               <option value="15">15 Days - AED 75</option>
               <option value="30">30 Days + 5 Grace - AED 125</option>
               <option value="daily">Daily Pass - AED 10</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Payment Method</label>
-            <select class="form-select" id="paymentMethod" required>
-              <option value="card">Card</option>
-              <option value="cash">Cash</option>
             </select>
           </div>
           <div class="col-md-6">
@@ -808,12 +822,21 @@ const tabs = {
       <div class="table-container">
         <table class="table table-striped">
           <thead>
-            <tr>
-              <th>User ID</th><th>Date & Time</th><th>Option</th><th>Amount</th><th>Payment</th><th>Remarks</th>
-            </tr>
+            <tr><th>User ID</th><th>Date & Time</th><th>Option</th><th>Amount</th><th>Payment</th><th>Remarks</th></tr>
           </thead>
           <tbody>
-            ${recent}
+            ${
+              recharges.slice(-5).reverse().map(r=>`
+                <tr>
+                  <td>${r.userId}</td>
+                  <td>${r.date}</td>
+                  <td>${r.option}</td>
+                  <td>AED ${r.amount}</td>
+                  <td>${r.method}</td>
+                  <td>${r.remarks||'-'}</td>
+                </tr>
+              `).join('')
+            }
           </tbody>
         </table>
       </div>
@@ -822,7 +845,7 @@ const tabs = {
   },
 
   history: () => {
-    let histHtml = `
+    let histHtml=`
       <h2><i class="fas fa-history me-2"></i>History</h2>
       <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -840,19 +863,19 @@ const tabs = {
           <input type="text" id="searchTravel" class="form-control mb-2" placeholder="Search Travel" onkeyup="searchTable('travelHistoryTable','searchTravel')" />
           <div class="table-container">
             <table class="table table-striped" id="travelHistoryTable">
-              <thead>
-                <tr><th>User ID</th><th>In Time</th><th>Date</th><th>Bus No.</th><th>Remaining</th></tr>
-              </thead>
+              <thead><tr><th>User ID</th><th>In Time</th><th>Date</th><th>Bus No.</th><th>Remaining</th></tr></thead>
               <tbody>
-                ${scans.map(s=>`
-                  <tr>
-                    <td>${s.userId}</td>
-                    <td>${s.inTime||'-'}</td>
-                    <td>${s.dateStr||'-'}</td>
-                    <td>${s.busNo||'Citizen 1'}</td>
-                    <td>${getUserBalance(s.userId)}</td>
-                  </tr>
-                `).join('')}
+                ${
+                  scans.map(s=>`
+                    <tr>
+                      <td>${s.userId}</td>
+                      <td>${s.inTime||'-'}</td>
+                      <td>${s.dateStr||'-'}</td>
+                      <td>${s.busNo||'Citizen 1'}</td>
+                      <td>${getUserBalance(s.userId)}</td>
+                    </tr>
+                  `).join('')
+                }
               </tbody>
             </table>
           </div>
@@ -861,20 +884,20 @@ const tabs = {
           <input type="text" id="searchRechargeHist" class="form-control mb-2" placeholder="Search Recharge" onkeyup="searchTable('rechargeHistoryTable','searchRechargeHist')" />
           <div class="table-container">
             <table class="table table-striped" id="rechargeHistoryTable">
-              <thead>
-                <tr><th>User ID</th><th>Date & Time</th><th>Option</th><th>Amount</th><th>Payment</th><th>Tx ID</th></tr>
-              </thead>
+              <thead><tr><th>User ID</th><th>Date & Time</th><th>Option</th><th>Amount</th><th>Payment</th><th>Tx ID</th></tr></thead>
               <tbody>
-                ${recharges.map((r,i)=>`
-                  <tr>
-                    <td>${r.userId}</td>
-                    <td>${r.date}</td>
-                    <td>${r.option}</td>
-                    <td>AED ${r.amount}</td>
-                    <td>${r.method}</td>
-                    <td>TX${1000+i}</td>
-                  </tr>
-                `).join('')}
+                ${
+                  recharges.map((r,i)=>`
+                    <tr>
+                      <td>${r.userId}</td>
+                      <td>${r.date}</td>
+                      <td>${r.option}</td>
+                      <td>AED ${r.amount}</td>
+                      <td>${r.method}</td>
+                      <td>TX${1000+i}</td>
+                    </tr>
+                  `).join('')
+                }
               </tbody>
             </table>
           </div>
@@ -883,18 +906,18 @@ const tabs = {
           <input type="text" id="searchIncident" class="form-control mb-2" placeholder="Search Incidents" onkeyup="searchTable('incidentTable','searchIncident')" />
           <div class="table-container">
             <table class="table table-striped" id="incidentTable">
-              <thead>
-                <tr><th>User ID</th><th>Type</th><th>Timestamp</th><th>Action</th></tr>
-              </thead>
+              <thead><tr><th>User ID</th><th>Type</th><th>Timestamp</th><th>Action</th></tr></thead>
               <tbody>
-                ${logbook.filter(l=>l.actionType==='Incident').map(l=>`
-                  <tr>
-                    <td>${l.details.userId||'-'}</td>
-                    <td>${l.details.type||'-'}</td>
-                    <td>${l.timestamp}</td>
-                    <td>${l.details.action||'-'}</td>
-                  </tr>
-                `).join('')}
+                ${
+                  logbook.filter(l=>l.actionType==='Incident').map(l=>`
+                    <tr>
+                      <td>${l.details.userId||'-'}</td>
+                      <td>${l.details.type||'-'}</td>
+                      <td>${l.timestamp}</td>
+                      <td>${l.details.action||'-'}</td>
+                    </tr>
+                  `).join('')
+                }
               </tbody>
             </table>
           </div>
@@ -914,7 +937,7 @@ const tabs = {
         <td>${getUserBalance(s.userId)}</td>
       </tr>
     `).join('');
-    let html = `
+    let html=`
       <h2><i class="fas fa-qrcode me-2"></i>Scan</h2>
       <form onsubmit="scanCard(event)">
         <div class="row g-3">
@@ -943,9 +966,7 @@ const tabs = {
       <h4>Recent Scans</h4>
       <div class="table-container">
         <table class="table table-striped">
-          <thead>
-            <tr><th>User ID</th><th>In Time</th><th>Date</th><th>Bus No.</th><th>Balance</th></tr>
-          </thead>
+          <thead><tr><th>User ID</th><th>In Time</th><th>Date</th><th>Bus No.</th><th>Balance</th></tr></thead>
           <tbody>
             ${last}
           </tbody>
@@ -956,7 +977,8 @@ const tabs = {
   },
 
   profile: () => {
-    let html = `
+    // Unique design for user profile
+    let html=`
       <h2><i class="fas fa-user me-2"></i>Passenger Profile</h2>
       <div class="mb-3">
         <label class="form-label">Enter User ID</label>
@@ -971,7 +993,7 @@ const tabs = {
   },
 
   reports: () => {
-    let html = `
+    let html=`
       <h2><i class="fas fa-chart-bar me-2"></i>Reports</h2>
       <form onsubmit="generateReport(event)">
         <div class="row g-3">
@@ -985,6 +1007,7 @@ const tabs = {
               <option value="whiteSummary">White Cards Summary</option>
               <option value="cashTransactions">Cash Transactions</option>
               <option value="cardTransactions">Card Transactions</option>
+              <option value="refundReport">Refund Report</option>
             </select>
           </div>
           <div class="col-md-3">
@@ -1008,52 +1031,97 @@ const tabs = {
   }
 };
 
-/**************************************************************
- * 7. EVENT HANDLERS & CORE LOGIC
- **************************************************************/
+/*******************************************************************
+ * 7. EVENT HANDLERS
+ *******************************************************************/
 function registerUser(e) {
   e.preventDefault();
   const userId = document.getElementById("userId").value.trim();
   const fullName = document.getElementById("fullName").value.trim();
-  const location = document.getElementById("location").value.trim();
-  const country = document.getElementById("country").value.trim();
-  const contact = document.getElementById("contact").value.trim();
+  const emiratesIdNo = document.getElementById("emiratesIdNo").value.trim();
   const cType = document.getElementById("cardType").value;
   const idExp = document.getElementById("idExpiration").value;
   const remarks = document.getElementById("remarks").value.trim();
 
-  if(users.find(u=>u.id===userId)) {
+  const companyName = document.getElementById("companyName").value.trim();
+  const storeName = document.getElementById("storeName").value.trim();
+  const pickLocation = document.getElementById("pickLocation").value.trim();
+  const onlineCompany = document.getElementById("onlineCompany").checked;
+  const blockCard = document.getElementById("blockCard").checked;
+
+  // check duplicates
+  if (users.find(u=>u.id===userId)) {
     showAlert('error','Registration Error','User ID already exists.');
     return;
   }
-  if(!validateUserInput({userId,fullName,location,country,contact,idExp})) return;
-  const isWhite = (cType==='white');
-  if(!validateExpirationDate(idExp, isWhite)) return;
+  // validate input
+  if (!validateUserInput({userId, fullName, idExp})) return;
+  let isWhite = (cType==='white');
+  if (!validateExpirationDate(idExp, isWhite)) return;
 
-  const newUser = {
-    id: userId,
-    name: fullName,
-    location,
-    country,
-    contact,
-    cardType: isWhite?'White Card':'EID Card',
-    idExpiration: idExp,
-    balance: 0,
-    remarks: isWhite?'White Card':'EID Card',
-    status: 'Active',
-    issueDate: isWhite?new Date().toISOString().split('T')[0]:null
+  let statusVal='Active';
+  if(blockCard) statusVal='Blocked';
+
+  const userObj={
+    id:userId,
+    name:fullName,
+    emiratesIdNo,
+    cardType:isWhite?'White Card':'EID Card',
+    idExpiration:idExp,
+    balance:0,
+    remarks:isWhite?'White Card':'EID Card',
+    status:statusVal,
+    issueDate:isWhite?(new Date().toISOString().split('T')[0]):null,
+    companyName,
+    storeName,
+    pickLocation,
+    onlineCompany
   };
-  users.push(newUser);
+  users.push(userObj);
   saveDataToLocalStorage();
-  logAction('User Registered', newUser);
-  showAlert('success','Success','User registered!');
+  logAction('User Registered', userObj);
+  showAlert('success','Success','User Registered.');
   showToast(`User [${userId}] added.`, 'Registration','bg-success');
   switchTab('cards');
 }
 
-function freezeCard(userId) {
-  const user = users.find(u=>u.id===userId);
+function blockCard(userId) {
+  const user=users.find(u=>u.id===userId);
   if(!user) {
+    showAlert('error','Block Error','User not found');
+    return;
+  }
+  if(user.status==='Blocked') {
+    showAlert('info','Already Blocked',`[${userId}] is already blocked`);
+    return;
+  }
+  user.status='Blocked';
+  saveDataToLocalStorage();
+  logAction('Card Blocked',{userId});
+  showToast(`Card [${userId}] blocked.`, 'Block','bg-danger');
+  switchTab('cards');
+}
+
+function unblockCard(userId) {
+  const user=users.find(u=>u.id===userId);
+  if(!user) {
+    showAlert('error','Unblock Error','User not found');
+    return;
+  }
+  if(user.status!=='Blocked') {
+    showAlert('info','Not Blocked',`[${userId}] not blocked`);
+    return;
+  }
+  user.status='Active';
+  saveDataToLocalStorage();
+  logAction('Card Unblocked',{userId});
+  showToast(`Card [${userId}] unblocked.`, 'Unblock','bg-success');
+  switchTab('cards');
+}
+
+function freezeCard(userId) {
+  const user=users.find(u=>u.id===userId);
+  if(!user){
     showAlert('error','Freeze Error','User not found.');
     return;
   }
@@ -1061,32 +1129,17 @@ function freezeCard(userId) {
     showAlert('info','Already Frozen',`[${userId}] is already frozen.`);
     return;
   }
-  Swal.fire({
-    title:'Freeze Card',
-    input:'textarea',
-    inputLabel:'Reason',
-    showCancelButton:true,
-    confirmButtonText:'Freeze',
-    preConfirm:(val)=>{
-      if(!val) Swal.showValidationMessage('Remarks needed');
-      return val;
-    }
-  }).then(res=>{
-    if(res.isConfirmed) {
-      user.status='Frozen';
-      user.freezeRemarks=res.value;
-      saveDataToLocalStorage();
-      logAction('Card Frozen',{userId, reason:res.value});
-      showToast(`Card [${userId}] frozen.`, 'Freeze','bg-warning');
-      switchTab('cards');
-    }
-  });
+  user.status='Frozen';
+  saveDataToLocalStorage();
+  logAction('Card Frozen',{userId});
+  showToast(`Card [${userId}] frozen.`, 'Freeze','bg-warning');
+  switchTab('cards');
 }
 
 function unfreezeCard(userId) {
-  const user = users.find(u=>u.id===userId);
-  if(!user) {
-    showAlert('error','Unfreeze Error','User not found');
+  const user=users.find(u=>u.id===userId);
+  if(!user){
+    showAlert('error','Unfreeze Error','User not found.');
     return;
   }
   if(user.status!=='Frozen') {
@@ -1094,26 +1147,57 @@ function unfreezeCard(userId) {
     return;
   }
   user.status='Active';
-  delete user.freezeRemarks;
   saveDataToLocalStorage();
   logAction('Card Unfrozen',{userId});
   showToast(`Card [${userId}] is active.`, 'Unfreeze','bg-success');
   switchTab('cards');
 }
 
-function viewHistory(userId) {
-  const userScans = scans.filter(s=>s.userId===userId).slice(-5).reverse();
-  const userRech = recharges.filter(r=>r.userId===userId).slice(-5).reverse();
+function refundCard(userId) {
+  const user=users.find(u=>u.id===userId);
+  if(!user){
+    showAlert('error','Refund Error','User not found.');
+    return;
+  }
+  Swal.fire({
+    title:'Refund Confirmation',
+    text:`Refund all balance from [${userId}]? Current Balance = ${user.balance.toFixed(2)} days`,
+    icon:'warning',
+    showCancelButton:true,
+    confirmButtonText:'Yes, Refund',
+    cancelButtonText:'Cancel'
+  }).then(res=>{
+    if(res.isConfirmed){
+      const refundAmount = user.balance;
+      user.balance=0;
+      saveDataToLocalStorage();
+      // Also store in refunds array
+      const refObj={
+        userId,
+        amount:refundAmount,
+        timestamp:new Date().toLocaleString()
+      };
+      refunds.push(refObj);
+      saveDataToLocalStorage();
+      logAction('Refund',{userId,amount:refundAmount});
+      showToast(`User [${userId}] refunded ${refundAmount} days.`, 'Refund','bg-secondary');
+      switchTab('cards');
+    }
+  });
+}
 
-  const scanRows = userScans.map(s=>`
+function viewHistory(userId) {
+  const userScans=scans.filter(s=>s.userId===userId).slice(-5).reverse();
+  const userRech=recharges.filter(r=>r.userId===userId).slice(-5).reverse();
+
+  const scanRows=userScans.map(s=>`
     <tr>
       <td>${s.inTime||'-'}</td>
       <td>${s.dateStr||'-'}</td>
       <td>${s.busNo||'Citizen 1'}</td>
     </tr>
   `).join('');
-
-  const rechRows = userRech.map(r=>`
+  const rechRows=userRech.map(r=>`
     <tr>
       <td>${r.date}</td>
       <td>${r.option}</td>
@@ -1123,45 +1207,69 @@ function viewHistory(userId) {
     </tr>
   `).join('');
 
-  let html = `
+  let html=`
     <h5>Scans (Last 5)</h5>
     <table class="table table-sm table-striped mb-3">
       <thead><tr><th>In Time</th><th>Date</th><th>Bus No.</th></tr></thead>
-      <tbody>
-        ${scanRows||'<tr><td colspan="3">No scans</td></tr>'}
-      </tbody>
+      <tbody>${scanRows||'<tr><td colspan="3">No scans</td></tr>'}</tbody>
     </table>
     <h5>Recharges (Last 5)</h5>
     <table class="table table-sm table-striped">
       <thead><tr><th>Date & Time</th><th>Option</th><th>Amount</th><th>Method</th><th>Remarks</th></tr></thead>
-      <tbody>
-        ${rechRows||'<tr><td colspan="5">No recharges</td></tr>'}
-      </tbody>
+      <tbody>${rechRows||'<tr><td colspan="5">No recharges</td></tr>'}</tbody>
     </table>
   `;
   Swal.fire({
-    title: `History for [${userId}]`,
+    title:`History [${userId}]`,
     html,
-    width: 700,
+    width:700,
     confirmButtonText:'Close'
   });
 }
 
+function autoFillRechargeInfo() {
+  const userId = document.getElementById("rechargeUserId").value.trim();
+  const user=users.find(u=>u.id===userId);
+  if(!user){
+    document.getElementById("rechargeUserName").value='';
+    document.getElementById("rechargeEmiratesId").value='';
+    document.getElementById("rechargeDaysRemaining").value='';
+    return;
+  }
+  document.getElementById("rechargeUserName").value=user.name;
+  document.getElementById("rechargeEmiratesId").value=user.emiratesIdNo||'';
+  document.getElementById("rechargeDaysRemaining").value=user.balance.toFixed(2);
+}
+
 function rechargeUser(e) {
   e.preventDefault();
-  const userId = document.getElementById("rechargeUserId").value.trim();
-  const rOpt = document.getElementById("rechargeOption").value;
-  const payMethod = document.getElementById("paymentMethod").value;
-  const remarks = document.getElementById("rechargeRemarks").value.trim();
+  const userId=document.getElementById("rechargeUserId").value.trim();
+  const userName=document.getElementById("rechargeUserName").value.trim();
+  const eIdNo=document.getElementById("rechargeEmiratesId").value.trim();
+  const rDaysRemain=document.getElementById("rechargeDaysRemaining").value.trim();
+  const rechargeD=document.getElementById("rechargeDate").value;
+  const payMethod=document.getElementById("paymentMethod").value;
+  const rOpt=document.getElementById("rechargeOption").value;
+  const remarks=document.getElementById("rechargeRemarks").value.trim();
 
-  const user = users.find(u=>u.id===userId);
-  if(!user) {
+  const user=users.find(u=>u.id===userId);
+  if(!user){
     showAlert('error','Recharge Error','User not found');
     return;
   }
 
+  // If blocked/frozen, no recharge
+  if(user.status==='Blocked'){
+    showAlert('error','Blocked Card','Cannot recharge a blocked card.');
+    return;
+  }
+  if(user.status==='Frozen'){
+    showAlert('error','Frozen Card','Cannot recharge a frozen card.');
+    return;
+  }
+
   let days=0, amt=0;
-  if(rOpt==='daily') {
+  if(rOpt==='daily'){
     days=1; amt=10;
   } else {
     days=parseInt(rOpt);
@@ -1172,10 +1280,11 @@ function rechargeUser(e) {
   user.balance+=days;
   const rec={
     userId,
-    date:new Date().toLocaleString(),
+    date: new Date().toLocaleString(),
+    rechargeDate: rechargeD,
     option:(rOpt==='daily')?'Daily Pass':days+' Days',
     amount:amt,
-    method:payMethod,
+    method:(payMethod==='online'?'Online Payment':'Debit'),
     remarks
   };
   recharges.push(rec);
@@ -1188,82 +1297,85 @@ function rechargeUser(e) {
 
 function scanCard(e) {
   e.preventDefault();
-  const m = document.getElementById("scanMethod").value;
+  const method = document.getElementById("scanMethod").value;
   const userId = document.getElementById("scanUserId").value.trim();
-  const user = users.find(u=>u.id===userId);
-
-  if(!user) {
+  const user=users.find(u=>u.id===userId);
+  if(!user){
     showAlert('error','Scan Error',`User [${userId}] not found.`);
-    logAction('Incident',{ userId, type:'Unregistered Scan'});
+    logAction('Incident',{userId,type:'Unregistered Scan'});
+    return;
+  }
+  // blocked/frozen check
+  if(user.status==='Blocked'){
+    showAlert('error','Blocked Card','Cannot scan a blocked card.');
+    return;
+  }
+  if(user.status==='Frozen'){
+    showAlert('error','Frozen Card','Cannot scan a frozen card.');
     return;
   }
 
-
-  const todayStr = new Date().toDateString();
-  const dayScans = scans.filter(s=> s.userId===userId && new Date(s.timestamp).toDateString()===todayStr );
-  if(dayScans.length>=2) {
-    showAlert('error','Limit Reached',`User [${userId}] daily limit=2`);
-    logAction('Incident',{userId, type:'Scan Limit Reached', action:'Override Needed'});
+  const todayStr=new Date().toDateString();
+  const dayScans=scans.filter(s=>
+    s.userId===userId && new Date(s.timestamp).toDateString()===todayStr
+  );
+  if(dayScans.length>=2){
+    showAlert('error','Limit Reached',`[${userId}] daily limit=2`);
+    logAction('Incident',{userId,type:'Scan Limit Reached',action:'OverrideNeeded'});
     return;
   }
-  // check balance
-  if(user.balance<0.5) {
-    showAlert('error','No Balance',`[${userId}] <0.5 left`);
-    logAction('Incident',{ userId, type:'Insufficient Balance'});
+  if(user.balance<0.5){
+    showAlert('error','No Balance',`[${userId}] has <0.5 days left`);
+    logAction('Incident',{userId,type:'Insufficient Balance'});
     return;
   }
-  // check expiration
-  const exp = new Date(user.idExpiration);
-  if(exp<new Date()) {
-    showAlert('error','Expired',`[${userId}] card expired`);
-    logAction('Incident',{userId, type:'Expired Card'});
+  const exp=new Date(user.idExpiration);
+  if(exp<new Date()){
+    showAlert('error','Card Expired',`[${userId}] card expired`);
+    logAction('Incident',{userId,type:'Expired Card'});
     return;
   } else {
     const diff=(exp-(new Date()))/(1000*60*60*24);
-    if(diff<45 && user.remarks==='EID Card') {
-      showAlert('warning','EID Expiring',`[${userId}] EID <45 days`);
+    if(diff<45 && user.remarks==='EID Card'){
+      showAlert('warning','EID Expiring',`[${userId}] <45 days left`);
       logAction('Warning',{userId,issue:'EID Expiring Soon'});
     }
   }
-
   user.balance-=0.5;
-  const scanRec = {
+  const scanRec={
     userId,
     timestamp:new Date().toLocaleString(),
-    inTime: new Date().toLocaleTimeString(),
-    dateStr: new Date().toLocaleDateString(),
+    inTime:new Date().toLocaleTimeString(),
+    dateStr:new Date().toLocaleDateString(),
     busNo:'Citizen 1'
   };
   scans.push(scanRec);
   saveDataToLocalStorage();
   logAction('Card Scanned', scanRec);
-
-  showAlert('success','Scan OK',`[${userId}] scanned. Rem: ${user.balance.toFixed(2)} days`);
+  showAlert('success','Scan OK',`[${userId}] scanned. Rem: ${user.balance.toFixed(2)}`);
   showToast(`Scan success [${userId}] -0.5 days`, 'Scan','bg-info');
   switchTab('history');
 }
 
 function viewPassengerProfile() {
-  const pid = document.getElementById("profileUserId").value.trim();
-  const user = users.find(u=>u.id===pid);
-  const resultDiv = document.getElementById("profileResult");
-  if(!user) {
-    resultDiv.innerHTML=`
-      <div class="alert alert-danger">User [${pid}] not found</div>
-    `;
+  const pid=document.getElementById("profileUserId").value.trim();
+  const user=users.find(u=>u.id===pid);
+  const resDiv=document.getElementById("profileResult");
+  if(!user){
+    resDiv.innerHTML=`<div class="alert alert-danger">User [${pid}] not found</div>`;
     return;
   }
-  const userScans = scans.filter(s=>s.userId===pid);
-  const userRechs = recharges.filter(r=>r.userId===pid);
+  const userScans=scans.filter(s=>s.userId===pid);
+  const userRechs=recharges.filter(r=>r.userId===pid);
 
-  const scansRows = userScans.map(s=>`
+  const scansRows=userScans.map(s=>`
     <tr>
       <td>${s.inTime||'-'}</td>
       <td>${s.dateStr||'-'}</td>
       <td>${s.busNo||'Citizen 1'}</td>
     </tr>
   `).join('');
-  const rechsRows = userRechs.map(r=>`
+  const rechsRows=userRechs.map(r=>`
     <tr>
       <td>${r.date}</td>
       <td>${r.option}</td>
@@ -1273,81 +1385,82 @@ function viewPassengerProfile() {
     </tr>
   `).join('');
 
-  let html = `
-    <div class="card mb-3">
-      <div class="card-header bg-dark text-white">
+  // Enhanced UI for profile
+  const html=`
+    <div class="profile-card">
+      <div class="profile-card-header">
         <h5 class="mb-0">Passenger: ${user.name} [${user.id}]</h5>
       </div>
-      <div class="card-body">
-        <p><strong>Location:</strong> ${user.location}</p>
-        <p><strong>Country:</strong> ${user.country}</p>
-        <p><strong>Contact:</strong> ${user.contact}</p>
-        <p><strong>CardType:</strong> ${user.cardType}</p>
-        <p><strong>Status:</strong> ${user.status}</p>
-        <p><strong>Balance:</strong> ${user.balance.toFixed(2)}</p>
-        <p><strong>Expiration:</strong> ${user.idExpiration}</p>
-        ${user.issueDate?`<p><strong>Issue:</strong> ${user.issueDate}</p>`:''}
-        <p><strong>Remarks:</strong> ${user.remarks||'-'}</p>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Emirates ID:</strong> ${user.emiratesIdNo||'-'}</p>
+          <p><strong>Card Type:</strong> ${user.cardType}</p>
+          <p><strong>Status:</strong> ${user.status}</p>
+          <p><strong>Balance:</strong> ${user.balance.toFixed(2)}</p>
+          <p><strong>Expiration:</strong> ${user.idExpiration}</p>
+          ${user.issueDate?`<p><strong>Issue Date:</strong> ${user.issueDate}</p>`:''}
+        </div>
+        <div class="col-md-6">
+          <p><strong>Company Name:</strong> ${user.companyName||'-'}</p>
+          <p><strong>Store Name:</strong> ${user.storeName||'-'}</p>
+          <p><strong>Pick Location:</strong> ${user.pickLocation||'-'}</p>
+          <p><strong>Online Company:</strong> ${user.onlineCompany?'Yes':'No'}</p>
+          <p><strong>Remarks:</strong> ${user.remarks||'-'}</p>
+        </div>
       </div>
-    </div>
-    <button class="btn btn-secondary mb-2" data-bs-toggle="collapse" data-bs-target="#fullProfileHist">
-      <i class="fas fa-eye me-1"></i>Show Full History
-    </button>
-    <div class="collapse" id="fullProfileHist">
-      <div class="card card-body">
+      <hr/>
+      <button class="btn btn-secondary mb-2" data-bs-toggle="collapse" data-bs-target="#fullProfileHist">
+        <i class="fas fa-eye me-1"></i>Show Full History
+      </button>
+      <div class="collapse" id="fullProfileHist">
         <h5>Scans</h5>
         <div class="table-container">
           <table class="table table-striped mb-3">
             <thead><tr><th>In Time</th><th>Date</th><th>Bus No.</th></tr></thead>
-            <tbody>
-              ${scansRows||'<tr><td colspan="3">No scans</td></tr>'}
-            </tbody>
+            <tbody>${scansRows||'<tr><td colspan="3">No scans</td></tr>'}</tbody>
           </table>
         </div>
         <h5>Recharges</h5>
         <div class="table-container">
           <table class="table table-striped">
             <thead><tr><th>Date & Time</th><th>Option</th><th>Amount</th><th>Method</th><th>Remarks</th></tr></thead>
-            <tbody>
-              ${rechsRows||'<tr><td colspan="5">No recharges</td></tr>'}
-            </tbody>
+            <tbody>${rechsRows||'<tr><td colspan="5">No recharges</td></tr>'}</tbody>
           </table>
         </div>
       </div>
     </div>
   `;
-  resultDiv.innerHTML=html;
+  resDiv.innerHTML=html;
 }
 
 function generateReport(e) {
   e.preventDefault();
-  const rType = document.getElementById("reportType").value;
-  const sDate = new Date(document.getElementById("startDate").value);
-  const eDate = new Date(document.getElementById("endDate").value);
-  if(sDate>eDate) {
+  const rType=document.getElementById("reportType").value;
+  const sDate=new Date(document.getElementById("startDate").value);
+  const eDate=new Date(document.getElementById("endDate").value);
+  if(sDate>eDate){
     showAlert('error','Invalid Range','Start must be <= End');
     return;
   }
-  let filtered=[];
-  let out='';
-
-  switch(rType) {
+  let out='', filtered=[];
+  switch(rType){
     case 'financial':
       {
-        const pass = prompt('Enter passkey for financial(cash) report:');
+        const pass=prompt('Enter passkey for financial(cash) report:');
         if(pass!=='4613'){
           showAlert('error','Denied','Wrong passkey');
           return;
         }
-        filtered = recharges.filter(r=>{
+        // We'll interpret "online" as "cash" for demonstration or adapt logic
+        filtered=recharges.filter(r=>{
           const dt=new Date(r.date);
-          return dt>=sDate && dt<=eDate && r.method==='cash';
+          return dt>=sDate && dt<=eDate && r.method==='Online Payment';
         });
-        out = `
-          <h4>Financial (Cash) Report</h4>
+        out=`
+          <h4>Financial (Online Payment) Report</h4>
           <div class="table-container">
             <table class="table table-striped">
-              <thead><tr><th>User</th><th>Date & Time</th><th>Amount</th></tr></thead>
+              <thead><tr><th>User ID</th><th>Date & Time</th><th>Amount</th></tr></thead>
               <tbody>
                 ${
                   filtered.map(r=>`
@@ -1366,7 +1479,7 @@ function generateReport(e) {
       break;
     case 'lowBalance':
       {
-        filtered = users.filter(u=>u.balance<10);
+        filtered=users.filter(u=>u.balance<10);
         out=`
           <h4>Low Balance (<10)</h4>
           <div class="table-container">
@@ -1390,12 +1503,12 @@ function generateReport(e) {
       break;
     case 'expiredCards':
       {
-        filtered = users.filter(u=> new Date(u.idExpiration)<new Date());
+        filtered=users.filter(u=>new Date(u.idExpiration)<new Date());
         out=`
           <h4>Expired Cards</h4>
           <div class="table-container">
             <table class="table table-striped">
-              <thead><tr><th>User</th><th>Name</th><th>Expiration</th></tr></thead>
+              <thead><tr><th>User ID</th><th>Name</th><th>Expiration</th></tr></thead>
               <tbody>
                 ${
                   filtered.map(u=>`
@@ -1414,12 +1527,12 @@ function generateReport(e) {
       break;
     case 'whiteSummary':
       {
-        filtered = users.filter(u=>u.remarks==='White Card');
+        filtered=users.filter(u=>u.remarks==='White Card');
         out=`
           <h4>White Cards Summary</h4>
           <div class="table-container">
             <table class="table table-striped">
-              <thead><tr><th>User</th><th>Name</th><th>Issue Date</th><th>Expiration</th></tr></thead>
+              <thead><tr><th>User ID</th><th>Name</th><th>Issue Date</th><th>Expiration</th></tr></thead>
               <tbody>
                 ${
                   filtered.map(u=>`
@@ -1439,17 +1552,18 @@ function generateReport(e) {
       break;
     case 'cashTransactions':
       {
-        const pass = prompt('Enter passkey for cash transactions:');
+        const pass=prompt('Enter passkey for cash transactions:');
         if(pass!=='4613'){
           showAlert('error','Denied','Wrong passkey');
           return;
         }
-        filtered = recharges.filter(r=>{
-          const dt = new Date(r.date);
-          return dt>=sDate && dt<=eDate && r.method==='cash';
+        // interpret "debit" as "cash" for example
+        filtered=recharges.filter(r=>{
+          const dt=new Date(r.date);
+          return dt>=sDate && dt<=eDate && r.method==='Debit';
         });
         out=`
-          <h4>Cash Transactions</h4>
+          <h4>Cash Transactions (treated as "Debit")</h4>
           <div class="table-container">
             <table class="table table-striped">
               <thead><tr><th>Tx ID</th><th>User</th><th>Date & Time</th><th>Amount</th></tr></thead>
@@ -1472,7 +1586,7 @@ function generateReport(e) {
       break;
     case 'cardTransactions':
       {
-        filtered = scans.filter(s=>{
+        filtered=scans.filter(s=>{
           const dt=new Date(s.timestamp);
           return dt>=sDate && dt<=eDate;
         });
@@ -1499,22 +1613,38 @@ function generateReport(e) {
         `;
       }
       break;
+    case 'refundReport':
+      {
+        // show all refunds in date range
+        const refFiltered=refunds.filter(r=>{
+          const dt=new Date(r.timestamp);
+          return dt>=sDate && dt<=eDate;
+        });
+        out=`
+          <h4>Refund Report</h4>
+          <div class="table-container">
+            <table class="table table-striped">
+              <thead><tr><th>User ID</th><th>Refund Amount</th><th>Date & Time</th></tr></thead>
+              <tbody>
+                ${
+                  refFiltered.map((ref,i)=>`
+                    <tr>
+                      <td>${ref.userId}</td>
+                      <td>${ref.amount.toFixed(2)} days</td>
+                      <td>${ref.timestamp}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      break;
     default:
       out='<p>No valid report selected.</p>';
   }
   document.getElementById("reportResult").innerHTML=out;
-}
-
-
-function toggleExpirationDate() {
-  const cType = document.getElementById("cardType");
-  const idExp = document.getElementById("idExpiration");
-  if (cType.value==='white') {
-    idExp.value='';
-    idExp.min = new Date().toISOString().split('T')[0];
-  } else {
-    setDefaultExpiration();
-  }
 }
 
 
@@ -1524,6 +1654,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 
-  </script>
+</script>
 </body>
 </html>
